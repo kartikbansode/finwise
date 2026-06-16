@@ -1,0 +1,34 @@
+import type { Metadata } from "next";
+import "./globals.css";
+import Navbar from "@/components/Navbar";
+import { Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+import Sidebar from "@/components/Sidebar";
+import ClientLayout from "@/components/ClientLayout";
+
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
+
+export const metadata: Metadata = {
+  title: "FinWise India — Tax & Finance for Freelancers and Businesses",
+  description:
+    "Track variable income, calculate GST and advance tax automatically, and know exactly how much you can safely spend. Built for Indian freelancers and business owners.",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html
+      lang="en"
+      className={cn("h-full antialiased", "font-sans", geist.variable)}
+    >
+      <body>
+        <Sidebar />
+
+        <ClientLayout>{children}</ClientLayout>
+      </body>
+    </html>
+  );
+}
