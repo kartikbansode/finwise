@@ -154,6 +154,16 @@ export default function DashboardPage() {
     profile.onboarding_completed,
   );
 
+  const monthlyProfit = monthlyIncome - monthlyExpenses;
+
+  const taxReserve = breakdown.incomeTax;
+
+  const savingsRate =
+    monthlyIncome > 0 ? Math.round((monthlyProfit / monthlyIncome) * 100) : 0;
+
+  const emergencyFundMonths =
+    monthlyExpenses > 0 ? (monthlyProfit / monthlyExpenses).toFixed(1) : "0";
+
   const nextDue = getNextAdvanceTaxDueDate();
 
   return (
@@ -170,6 +180,40 @@ export default function DashboardPage() {
           </div>
 
           <UserDropdown name={profile.full_name} userType={profile.user_type} />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div className="bg-white rounded-xl border p-5">
+            <p className="text-xs text-gray-500 uppercase">Monthly Profit</p>
+
+            <p className="text-2xl font-bold text-emerald-600 mt-1">
+              ₹{monthlyProfit.toLocaleString("en-IN")}
+            </p>
+          </div>
+
+          <div className="bg-white rounded-xl border p-5">
+            <p className="text-xs text-gray-500 uppercase">Savings Rate</p>
+
+            <p className="text-2xl font-bold text-blue-600 mt-1">
+              {savingsRate}%
+            </p>
+          </div>
+
+          <div className="bg-white rounded-xl border p-5">
+            <p className="text-xs text-gray-500 uppercase">Tax Reserve</p>
+
+            <p className="text-2xl font-bold text-amber-600 mt-1">
+              ₹{taxReserve.toLocaleString("en-IN")}
+            </p>
+          </div>
+
+          <div className="bg-white rounded-xl border p-5">
+            <p className="text-xs text-gray-500 uppercase">Runway</p>
+
+            <p className="text-2xl font-bold text-purple-600 mt-1">
+              {emergencyFundMonths} mo
+            </p>
+          </div>
         </div>
 
         <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
@@ -208,8 +252,55 @@ export default function DashboardPage() {
             <p className="text-2xl font-bold text-white mt-1">
               ₹{Math.max(0, breakdown.safeToSpend).toLocaleString("en-IN")}
             </p>
+            <p className="text-xs text-emerald-100 mt-2">
+              After tax & expense reserve
+            </p>
           </div>
         </div>
+
+        {savingsRate < 20 && (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+            <p className="font-medium text-red-700">
+              Warning: Your savings rate is below 20%.
+            </p>
+          </div>
+        )}
+
+        {monthlyExpenses > monthlyIncome && (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+            <p className="font-medium text-red-700">
+              Expenses are higher than income this month.
+            </p>
+          </div>
+        )}
+
+        <div className="bg-white rounded-xl border p-5 mb-6">
+  <h3 className="font-semibold mb-4">
+    Financial Insights
+  </h3>
+
+  <ul className="space-y-2 text-sm text-gray-600">
+    <li>
+      • Estimated annual income:
+      ₹{annualProjected.toLocaleString("en-IN")}
+    </li>
+
+    <li>
+      • Tax liability:
+      ₹{breakdown.incomeTax.toLocaleString("en-IN")}
+    </li>
+
+    <li>
+      • Safe spending available:
+      ₹{Math.max(0, breakdown.safeToSpend).toLocaleString("en-IN")}
+    </li>
+
+    <li>
+      • Current savings rate:
+      {savingsRate}%
+    </li>
+  </ul>
+</div>
 
         {/* Tax Method */}
         <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
