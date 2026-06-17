@@ -161,8 +161,8 @@ export default function DashboardPage() {
   const savingsRate =
     monthlyIncome > 0 ? Math.round((monthlyProfit / monthlyIncome) * 100) : 0;
 
-  const emergencyFundMonths =
-    monthlyExpenses > 0 ? (monthlyProfit / monthlyExpenses).toFixed(1) : "0";
+  const expenseRatio =
+    monthlyIncome > 0 ? Math.round((monthlyExpenses / monthlyIncome) * 100) : 0;
 
   const nextDue = getNextAdvanceTaxDueDate();
 
@@ -170,7 +170,7 @@ export default function DashboardPage() {
     <main className="min-h-screen bg-gray-50 p-6 md:p-10">
       <div className="w-full px-8">
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-6 mb-6">
-          <div className="bg-white rounded-2xl border p-8 flex-1">
+          <div className="bg-white rounded-2xl border p-8 lg:max-w-2xl">
             <p className="text-sm text-gray-500">Financial Overview</p>
 
             <h2 className="text-4xl font-bold mt-3">
@@ -207,6 +207,13 @@ export default function DashboardPage() {
           </div>
 
           <UserDropdown name={profile.full_name} userType={profile.user_type} />
+          <p className="text-xs text-gray-400 mt-1">
+            {new Date().toLocaleDateString("en-IN", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
@@ -235,10 +242,10 @@ export default function DashboardPage() {
           </div>
 
           <div className="bg-white rounded-xl border p-5">
-            <p className="text-xs text-gray-500 uppercase">Runway</p>
+            <p className="text-xs text-gray-500 uppercase">Expense Ratio</p>
 
             <p className="text-2xl font-bold text-purple-600 mt-1">
-              {emergencyFundMonths} mo
+              {expenseRatio}%
             </p>
           </div>
         </div>
@@ -254,19 +261,19 @@ export default function DashboardPage() {
 
           <p className="text-sm text-gray-500 mt-1">{healthScore.status}</p>
 
-          <ul className="mt-4 space-y-2 text-sm text-gray-600">
-            <li>✓ Tax profile configured</li>
+          <div className="grid md:grid-cols-3 gap-4 mt-5 text-sm">
+            <div className="bg-gray-50 rounded-lg p-3">✓ Tax Setup</div>
 
-            <li>✓ Income tracked regularly</li>
+            <div className="bg-gray-50 rounded-lg p-3">✓ Income Tracking</div>
 
-            <li>✓ Expense tracking active</li>
-          </ul>
+            <div className="bg-gray-50 rounded-lg p-3">✓ Expense Tracking</div>
+          </div>
         </div>
 
         <div className="bg-white rounded-xl border p-5 mb-6">
           <h3 className="font-semibold mb-4">Annual Projection</h3>
 
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-4 gap-4">
             <div>
               <p className="text-xs text-gray-500">Income</p>
 
@@ -293,19 +300,37 @@ export default function DashboardPage() {
                 )}
               </p>
             </div>
+            <div>
+              <p className="text-xs text-gray-500">Effective Tax Rate</p>
+
+              <p className="font-bold">
+                {annualProjected > 0
+                  ? Math.round((breakdown.incomeTax / annualProjected) * 100)
+                  : 0}
+                %
+              </p>
+            </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border p-5 mb-6">
-          <h3 className="font-semibold mb-4">Financial Insights</h3>
+        <div className="space-y-3">
+          {savingsRate < 20 && (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+              Savings rate is below 20%
+            </div>
+          )}
 
-          <div className="space-y-3">
-            {savingsRate < 20 && <p>⚠ Savings rate is below 20%</p>}
+          {monthlyExpenses > monthlyIncome && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+              Expenses exceed income
+            </div>
+          )}
 
-            {monthlyExpenses > monthlyIncome && <p>⚠ Expenses exceed income</p>}
-
-            {monthlyProfit > 0 && <p>✓ Positive monthly cash flow</p>}
-          </div>
+          {monthlyProfit > 0 && (
+            <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3">
+              Positive monthly cash flow
+            </div>
+          )}
         </div>
 
         {monthlyExpenses > monthlyIncome && (
@@ -317,28 +342,44 @@ export default function DashboardPage() {
         )}
 
         {/* Tax Method */}
-        <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
-          <p className="text-xs text-gray-500 uppercase tracking-wide">
-            Tax Method
-          </p>
+        <div className="bg-white rounded-xl border p-5 mb-6">
+          <h3 className="font-semibold mb-4">Tax Configuration</h3>
 
-          <p className="text-xl font-bold mt-2">
-            {profile.tax_method === "44ada"
-              ? "44ADA"
-              : profile.tax_method === "44ad"
-                ? "44AD"
-                : "Normal"}
-          </p>
+          <div className="grid md:grid-cols-4 gap-4">
+            <div>
+              <p className="text-xs text-gray-500">Method</p>
 
-          <p className="text-xs text-gray-500 uppercase">Tax Readiness</p>
+              <p className="font-semibold">
+                {profile.tax_method === "44ada"
+                  ? "44ADA"
+                  : profile.tax_method === "44ad"
+                    ? "44AD"
+                    : "Normal"}
+              </p>
+            </div>
 
-          <p className="text-3xl font-bold mt-2">
-            {profile.gst_registered ? "90%" : "70%"}
-          </p>
+            <div>
+              <p className="text-xs text-gray-500">Regime</p>
 
-          <p className="text-gray-500 text-sm mt-2">
-            Based on tax setup and compliance status
-          </p>
+              <p className="font-semibold capitalize">{profile.tax_regime}</p>
+            </div>
+
+            <div>
+              <p className="text-xs text-gray-500">GST</p>
+
+              <p className="font-semibold">
+                {profile.gst_registered ? "Registered" : "Not Registered"}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xs text-gray-500">Readiness</p>
+
+              <p className="font-semibold text-emerald-600">
+                {profile.gst_registered ? "90%" : "70%"}
+              </p>
+            </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -385,34 +426,40 @@ export default function DashboardPage() {
         <div className="grid md:grid-cols-4 gap-4 mb-6">
           <Link
             href="/income"
-            className="bg-white border rounded-xl p-5 hover:border-emerald-500 transition"
+            className="bg-white border rounded-xl p-5 hover:border-emerald-500 hover:shadow-md transition-all"
           >
             <p className="font-semibold">Add Income</p>
-            <p className="text-sm text-gray-500">Record new income</p>
+
+            <p className="text-sm text-gray-500 mt-1">Record new income</p>
           </Link>
 
           <Link
             href="/expenses"
-            className="bg-white border rounded-xl p-5 hover:border-emerald-500 transition"
+            className="bg-white border rounded-xl p-5 hover:border-emerald-500 hover:shadow-md transition-all"
           >
             <p className="font-semibold">Add Expense</p>
-            <p className="text-sm text-gray-500">Record new expense</p>
+
+            <p className="text-sm text-gray-500 mt-1">
+              Record business expenses
+            </p>
           </Link>
 
           <Link
             href="/invoices"
-            className="bg-white border rounded-xl p-5 hover:border-emerald-500 transition"
+            className="bg-white border rounded-xl p-5 hover:border-emerald-500 hover:shadow-md transition-all"
           >
             <p className="font-semibold">Invoices</p>
-            <p className="text-sm text-gray-500">Manage invoices</p>
+
+            <p className="text-sm text-gray-500 mt-1">Manage invoices</p>
           </Link>
 
           <Link
             href="/tax-center"
-            className="bg-white border rounded-xl p-5 hover:border-emerald-500 transition"
+            className="bg-white border rounded-xl p-5 hover:border-emerald-500 hover:shadow-md transition-all"
           >
             <p className="font-semibold">Tax Center</p>
-            <p className="text-sm text-gray-500">Manage tax-related tasks</p>
+
+            <p className="text-sm text-gray-500 mt-1">View tax obligations</p>
           </Link>
         </div>
 
