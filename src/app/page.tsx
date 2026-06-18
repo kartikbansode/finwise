@@ -12,15 +12,14 @@ import {
 import {
   Menu,
   X,
-  TrendingUp,
   FileText,
   DollarSign,
   PieChart,
   Check,
 } from "lucide-react";
 
+
 export default function LandingPage() {
-  const [scrollY, setScrollY] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [income, setIncome] = useState(500000);
   const [expenses, setExpenses] = useState(150000);
@@ -28,51 +27,6 @@ export default function LandingPage() {
 
   // Navbar shrink on scroll
   const navbarHeight = useTransform(scrollYProgress, [0, 0.1], [80, 64]);
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  type StatCounterProps = {
-    target: number;
-    label: string;
-    prefix?: string;
-  };
-
-  // Stats counter animation
-  const StatCounter = ({ target, label, prefix = "" }: StatCounterProps) => {
-    const [count, setCount] = useState<number>(0);
-
-    useEffect(() => {
-      let start = 0;
-      const increment = target / 50;
-      const interval = setInterval(() => {
-        start += increment;
-        if (start >= target) {
-          setCount(target);
-          clearInterval(interval);
-        } else {
-          setCount(Math.floor(start));
-        }
-      }, 20);
-      return () => clearInterval(interval);
-    }, [target]);
-
-    return (
-      <div className="text-center">
-        <div className="text-3xl md:text-4xl font-bold text-emerald-600 mb-2">
-          {prefix}
-          {count.toLocaleString()}
-          {target === 99.9 ? "%" : "+"}
-        </div>
-        <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base">
-          {label}
-        </p>
-      </div>
-    );
-  };
 
   return (
     <div className="bg-white dark:bg-zinc-950 text-gray-900 dark:text-white overflow-hidden">
@@ -84,9 +38,12 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 md:px-6 h-full flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-emerald-600 to-teal-600 rounded-lg flex items-center justify-center text-white font-bold">
-              FW
-            </div>
+            <Image
+              src="/logo/finwise-icon.png"
+              alt="FinWise"
+              width={40}
+              height={40}
+            />
             <span className="hidden sm:inline font-bold text-lg">FinWise</span>
           </div>
 
@@ -180,66 +137,222 @@ export default function LandingPage() {
       </motion.nav>
 
       {/* Hero Section */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        className="pt-32 md:pt-40 pb-20 md:pb-32 px-4 md:px-6 max-w-7xl mx-auto text-center"
+<motion.section
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 0.8 }}
+  className="
+relative
+min-h-screen
+flex
+items-center
+justify-center
+overflow-hidden
+"
+>
+  {/* Background Video */}
+  <video
+    autoPlay
+    muted
+    loop
+    playsInline
+    className="
+absolute
+inset-0
+w-full
+h-full
+object-cover
+"
+  >
+    <source src="/landing/hero-video.mp4" type="video/mp4" />
+  </video>
+
+  {/* Dark Overlay */}
+  <div
+    className="
+absolute
+inset-0
+bg-black/65
+"
+  />
+
+  {/* Floating Glow */}
+  <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-emerald-500/20 blur-[180px] rounded-full" />
+
+  {/* Content */}
+  <div className="relative z-10 max-w-7xl mx-auto px-6 text-center text-white">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.2 }}
+      className="
+inline-flex
+items-center
+gap-2
+px-5
+py-2.5
+rounded-full
+border
+border-white/10
+bg-white/5
+backdrop-blur-xl
+text-sm
+font-medium
+mb-8
+"
+    >
+      Financial Operating System for Indian Businesses
+    </motion.div>
+
+    <motion.h1
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.3 }}
+      className="
+text-5xl
+md:text-7xl
+lg:text-[90px]
+font-bold
+leading-[0.95]
+tracking-tight
+"
+    >
+      Run Your Entire
+      <br />
+      Business From
+      <br />
+      <span className="text-emerald-400">
+        One Dashboard
+      </span>
+    </motion.h1>
+
+    <motion.p
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.4 }}
+      className="
+mt-8
+max-w-3xl
+mx-auto
+text-lg
+md:text-2xl
+text-white/70
+leading-relaxed
+"
+    >
+      Track income, expenses, GST, invoices, tax obligations and
+      business performance with complete financial clarity.
+    </motion.p>
+
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.5 }}
+      className="
+flex
+flex-col
+sm:flex-row
+justify-center
+gap-4
+mt-10
+"
+    >
+      <Link
+        href="/signup"
+        className="
+px-10
+py-5
+rounded-2xl
+bg-emerald-600
+hover:bg-emerald-700
+font-semibold
+text-lg
+shadow-2xl
+shadow-emerald-500/30
+transition-all
+duration-300
+hover:scale-105
+"
       >
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.8 }}
-          className="inline-flex mb-6 md:mb-8 bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 px-4 py-2 rounded-full text-xs md:text-sm font-medium"
-        >
-          Financial Operating System for Indian Businesses
-        </motion.div>
+        Start Free
+      </Link>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.8 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-bold leading-tight mb-6 md:mb-8"
-        >
-          Track Income.
-          <br />
-          <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-            Manage Taxes.
-          </span>
-          <br />
-          Run Your Business Like a CFO.
-        </motion.h1>
+      <Link
+        href="#features"
+        className="
+px-10
+py-5
+rounded-2xl
+border
+border-white/20
+bg-white/5
+backdrop-blur-xl
+font-semibold
+text-lg
+hover:bg-white/10
+transition-all
+duration-300
+"
+      >
+        Explore Features
+      </Link>
+    </motion.div>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mb-8 md:mb-12"
-        >
-          Know exactly how much money is yours. Built for Indian freelancers,
-          agencies, consultants, and business owners who want clarity over their
-          finances.
-        </motion.p>
+    {/* Stats */}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.7 }}
+      className="
+grid
+grid-cols-2
+md:grid-cols-4
+gap-8
+mt-20
+max-w-5xl
+mx-auto
+"
+    >
+      <div>
+        <div className="text-3xl md:text-5xl font-bold text-emerald-400">
+          ₹1Cr+
+        </div>
+        <div className="text-white/60 mt-2">
+          Invoices Processed
+        </div>
+      </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
-          className="flex flex-col sm:flex-row justify-center gap-4"
-        >
-          <Link
-            href="/signup"
-            className="px-8 md:px-10 py-4 md:py-5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl md:rounded-2xl font-semibold hover:shadow-lg hover:shadow-emerald-500/50 transition duration-300 text-center"
-          >
-            Create Free Account
-          </Link>
-          <button className="px-8 md:px-10 py-4 md:py-5 border-2 border-gray-300 dark:border-zinc-700 rounded-xl md:rounded-2xl font-semibold hover:bg-gray-50 dark:hover:bg-zinc-900 transition">
-            Watch Demo
-          </button>
-        </motion.div>
-      </motion.section>
+      <div>
+        <div className="text-3xl md:text-5xl font-bold text-emerald-400">
+          ₹5Cr+
+        </div>
+        <div className="text-white/60 mt-2">
+          Tax Calculated
+        </div>
+      </div>
 
-      {/* 3D Dashboard Showcase */}
+      <div>
+        <div className="text-3xl md:text-5xl font-bold text-emerald-400">
+          1K+
+        </div>
+        <div className="text-white/60 mt-2">
+          Businesses
+        </div>
+      </div>
+
+      <div>
+        <div className="text-3xl md:text-5xl font-bold text-emerald-400">
+          99.8%
+        </div>
+        <div className="text-white/60 mt-2">
+          Accuracy
+        </div>
+      </div>
+    </motion.div>
+  </div>
+</motion.section>
+
+      {/* 3D Dashboard Showcase. */}
       <motion.section
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
@@ -258,19 +371,15 @@ export default function LandingPage() {
               transformStyle: "preserve-3d",
             }}
           >
-            <div className="bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-3xl md:rounded-4xl overflow-hidden border border-emerald-200 dark:border-emerald-800 shadow-2xl">
-              {/* Placeholder for dashboard image */}
-              <div className="aspect-video bg-gradient-to-br from-slate-900 via-emerald-900 to-slate-900 flex items-center justify-center">
-                <div className="text-center">
-                  <TrendingUp className="w-16 h-16 md:w-20 md:h-20 mx-auto text-emerald-400 mb-4 opacity-50" />
-                  <p className="text-emerald-300 text-sm md:text-base">
-                    Dashboard Preview
-                  </p>
-                  <p className="text-gray-500 text-xs md:text-sm mt-2">
-                    Upload /public/landing/hero-dashboard.webp
-                  </p>
-                </div>
-              </div>
+            <div className="rounded-3xl md:rounded-4xl overflow-hidden border border-emerald-200 dark:border-emerald-800 shadow-2xl">
+              <Image
+                src="/landing/dashboard-preview1.png"
+                alt="FinWise Dashboard Preview"
+                width={1200}
+                height={675}
+                priority
+                className="w-full h-auto"
+              />
             </div>
 
             {/* Floating Cards */}
@@ -336,20 +445,7 @@ export default function LandingPage() {
         </div>
       </motion.section>
 
-      {/* Animated Stats Strip */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        className="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 py-16 md:py-20 px-4 md:px-6 border-y border-gray-200 dark:border-zinc-800"
-      >
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
-          <StatCounter target={120} prefix="₹" label="Cr+ Invoices Processed" />
-          <StatCounter target={45} prefix="₹" label="Cr+ Tax Calculated" />
-          <StatCounter target={25000} label="Businesses Using FinWise" />
-          <StatCounter target={99.9} label="Accuracy Rate" />
-        </div>
-      </motion.section>
+      
 
       {/* Feature Sections - Alternating Layout */}
       <section
@@ -392,18 +488,14 @@ export default function LandingPage() {
               ))}
             </ul>
           </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-3xl aspect-square flex items-center justify-center border border-emerald-200 dark:border-emerald-800"
-          >
-            <div className="text-center">
-              <TrendingUp className="w-20 h-20 mx-auto text-emerald-600 mb-4 opacity-60" />
-              <p className="text-emerald-700 dark:text-emerald-400 font-semibold">
-                Income Dashboard
-              </p>
-            </div>
+          <motion.div className="rounded-3xl overflow-hidden border border-emerald-200 dark:border-emerald-800">
+            <Image
+              src="/landing/income-dashboard.png"
+              alt="Income Tracking Dashboard"
+              width={600}
+              height={600}
+              className="w-full h-auto"
+            />
           </motion.div>
         </motion.div>
 
@@ -414,18 +506,14 @@ export default function LandingPage() {
           transition={{ duration: 0.8 }}
           className="grid md:grid-cols-2 gap-8 md:gap-16 items-center"
         >
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-3xl aspect-square flex items-center justify-center border border-blue-200 dark:border-blue-800 order-2 md:order-1"
-          >
-            <div className="text-center">
-              <FileText className="w-20 h-20 mx-auto text-blue-600 mb-4 opacity-60" />
-              <p className="text-blue-700 dark:text-blue-400 font-semibold">
-                Tax Center
-              </p>
-            </div>
+          <motion.div className="rounded-3xl overflow-hidden border border-emerald-200 dark:border-emerald-800">
+            <Image
+              src="/landing/tax-dashboard1.png"
+              alt="Tax Tracking Dashboard"
+              width={600}
+              height={600}
+              className="w-full h-auto"
+            />
           </motion.div>
           <motion.div
             initial={{ opacity: 0, x: 40 }}
@@ -493,18 +581,14 @@ export default function LandingPage() {
               ))}
             </ul>
           </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/20 dark:to-pink-900/20 rounded-3xl aspect-square flex items-center justify-center border border-purple-200 dark:border-purple-800"
-          >
-            <div className="text-center">
-              <FileText className="w-20 h-20 mx-auto text-purple-600 mb-4 opacity-60" />
-              <p className="text-purple-700 dark:text-purple-400 font-semibold">
-                Invoice Generator
-              </p>
-            </div>
+          <motion.div className="rounded-3xl overflow-hidden border border-emerald-200 dark:border-emerald-800">
+            <Image
+              src="/landing/invoice-dashboard.png"
+              alt="Invoice Dashboard"
+              width={600}
+              height={600}
+              className="w-full h-auto"
+            />
           </motion.div>
         </motion.div>
       </section>
@@ -655,32 +739,26 @@ export default function LandingPage() {
         <div className="grid md:grid-cols-3 gap-6 md:gap-8">
           {[
             {
-              icon: "🏦",
               title: "GST Support",
               desc: "Full GST registration, filing, and compliance tracking",
             },
             {
-              icon: "📊",
               title: "44ADA/44AD",
               desc: "Presumptive income scheme for sole proprietors",
             },
             {
-              icon: "⏰",
               title: "Advance Tax",
               desc: "Automated advance tax calculations and reminders",
             },
             {
-              icon: "💰",
               title: "Cash Flow",
               desc: "Never run out of cash with predictive forecasting",
             },
             {
-              icon: "📈",
               title: "Profit Tracking",
               desc: "Real-time visibility into your business profitability",
             },
             {
-              icon: "🎯",
               title: "Business Goals",
               desc: "Set targets and track progress toward them",
             },
@@ -772,23 +850,90 @@ export default function LandingPage() {
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
-        className="py-20 md:py-32 px-4 md:px-6 bg-gradient-to-br from-slate-900 to-emerald-900"
+        className="
+relative
+min-h-[80vh]
+flex
+items-center
+justify-center
+overflow-hidden
+"
       >
-        <div className="max-w-4xl mx-auto text-center text-white">
-          <h2 className="text-5xl md:text-6xl font-bold mb-6">
+        {/* Background Video */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="
+absolute
+top-0
+left-0
+w-full
+h-full
+object-cover
+"
+        >
+          <source src="/landing/cta-bgvideo.mp4" type="video/mp4" />
+        </video>
+
+        {/* Dark Overlay */}
+        <div
+          className="
+absolute
+inset-0
+bg-black/60
+backdrop-blur-[2px]
+"
+        />
+
+        {/* Content */}
+        <div
+          className="
+relative
+z-10
+max-w-5xl
+mx-auto
+text-center
+px-6
+text-white
+"
+        >
+          <h2 className="text-5xl md:text-7xl font-bold mb-6">
             Stop Guessing.
           </h2>
-          <p className="text-xl md:text-2xl text-gray-300 mb-10">
+
+          <p className="text-xl md:text-3xl text-white/80 mb-10 max-w-3xl mx-auto">
             Start Running Your Business Like a CFO.
           </p>
+
           <Link
             href="/signup"
-            className="inline-block px-10 md:px-12 py-5 md:py-6 bg-emerald-600 hover:bg-emerald-700 rounded-2xl font-semibold text-lg transition duration-300"
+            className="
+inline-flex
+items-center
+justify-center
+px-10
+md:px-14
+py-5
+md:py-6
+rounded-2xl
+bg-emerald-600
+hover:bg-emerald-700
+text-lg
+font-semibold
+shadow-2xl
+shadow-emerald-500/30
+transition-all
+duration-300
+hover:scale-105
+"
           >
             Create Free Account
           </Link>
-          <p className="text-gray-400 text-sm mt-6">
-            No credit card required. Start tracking today.
+
+          <p className="text-white/60 text-sm mt-6">
+            No credit card required • Free forever plan available
           </p>
         </div>
       </motion.section>
@@ -800,9 +945,12 @@ export default function LandingPage() {
             {/* Brand */}
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-br from-emerald-600 to-teal-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
-                  FW
-                </div>
+                <Image
+                  src="/logo/finwise-icon.png"
+                  alt="FinWise"
+                  width={40}
+                  height={40}
+                />
                 <span className="font-bold">FinWise</span>
               </div>
               <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -815,17 +963,26 @@ export default function LandingPage() {
               <h4 className="font-semibold mb-4">Product</h4>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                 <li>
-                  <a href="#" className="hover:text-emerald-600 transition">
+                  <a
+                    href="/login"
+                    className="hover:text-emerald-600 transition"
+                  >
                     Features
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-emerald-600 transition">
+                  <a
+                    href="/login"
+                    className="hover:text-emerald-600 transition"
+                  >
                     Pricing
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-emerald-600 transition">
+                  <a
+                    href="/login"
+                    className="hover:text-emerald-600 transition"
+                  >
                     Tax Center
                   </a>
                 </li>
@@ -837,17 +994,26 @@ export default function LandingPage() {
               <h4 className="font-semibold mb-4">Legal</h4>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                 <li>
-                  <a href="#" className="hover:text-emerald-600 transition">
+                  <a
+                    href="/privacy"
+                    className="hover:text-emerald-600 transition"
+                  >
                     Privacy
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-emerald-600 transition">
+                  <a
+                    href="/terms"
+                    className="hover:text-emerald-600 transition"
+                  >
                     Terms
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-emerald-600 transition">
+                  <a
+                    href="/login"
+                    className="hover:text-emerald-600 transition"
+                  >
                     Contact
                   </a>
                 </li>
@@ -859,17 +1025,26 @@ export default function LandingPage() {
               <h4 className="font-semibold mb-4">Support</h4>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                 <li>
-                  <a href="#" className="hover:text-emerald-600 transition">
+                  <a
+                    href="/login"
+                    className="hover:text-emerald-600 transition"
+                  >
                     Help Center
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-emerald-600 transition">
+                  <a
+                    href="/login"
+                    className="hover:text-emerald-600 transition"
+                  >
                     Email us
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-emerald-600 transition">
+                  <a
+                    href="/login"
+                    className="hover:text-emerald-600 transition"
+                  >
                     Community
                   </a>
                 </li>

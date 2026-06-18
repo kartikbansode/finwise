@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+
 import {
   LayoutDashboard,
   IndianRupee,
@@ -57,7 +58,9 @@ export default function Sidebar() {
     pathname === "/" ||
     pathname === "/login" ||
     pathname === "/signup" ||
-    pathname === "/onboarding"
+    pathname === "/onboarding" ||
+    pathname === "/privacy" ||
+    pathname === "/terms"
   ) {
     return null;
   }
