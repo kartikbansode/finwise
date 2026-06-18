@@ -120,109 +120,135 @@ export default function SignupPage() {
   return (
     <main className="min-h-screen bg-white dark:bg-black grid lg:grid-cols-2">
       {/* Left Side */}
-      <div
-        className="
+<div
+  className="
 hidden lg:flex
 relative
 flex-col
 justify-between
 p-16
-bg-gradient-to-br
-from-emerald-600
-via-emerald-700
-to-emerald-900
 text-white
 overflow-hidden
 "
-      >
-        <div className="fixed top-6 right-6 z-50">
-  <button
-    onClick={() => router.back()}
+>
+  {/* Background Video */}
+  <video
+    autoPlay
+    muted
+    loop
+    playsInline
     className="
-    cursor-pointer
-
-    flex items-center gap-2
-
-    bg-white/90
-    dark:bg-zinc-900/90
-
-    backdrop-blur-md
-
-    border
-    border-gray-200
-    dark:border-zinc-800
-
-    text-gray-700
-    dark:text-gray-300
-
-    px-4 py-2.5
-    rounded-xl
-
-    shadow-sm
-    hover:shadow-lg
-    hover:scale-105
-
-    transition-all
-    duration-200
+    absolute
+    inset-0
+    w-full
+    h-full
+    object-cover
+    blur-[3px]
+    scale-110
+    brightness-75
     "
   >
-    <ArrowLeft size={16} />
-    Back
-  </button>
-</div>
-        <div>
+    <source src="/landing/cta-bgvideo.mp4" type="video/mp4" />
+  </video>
 
-          <div className="flex items-center gap-4 ">
-            <Image
-              src="/logo/finwise-icon.png"
-              alt="FinWise"
-              width={60}
-              height={60} className="rounded-2xl border border-white/20 shadow-lg"
-            />
+  {/* Overlay */}
+  <div
+    className="
+    absolute
+    inset-0
+    bg-black/40
+    "
+  />
 
-            <div>
-              <h1 className="text-3xl font-bold">FinWise</h1>
+  {/* Back Button */}
+  <div className="fixed top-6 right-6 z-50">
+    <button
+      onClick={() => router.back()}
+      className="
+      cursor-pointer
+      flex items-center gap-2
 
-              <p className="text-emerald-100">India</p>
-            </div>
-          </div>
+      bg-white/90
+      dark:bg-zinc-900/90
 
-          <div className="mt-16">
-            <h2 className="text-6xl font-bold leading-tight max-w-xl">
-              Build Your Financial Command Center
-            </h2>
+      backdrop-blur-md
 
-            <p className="mt-6 text-xl text-emerald-100 max-w-lg">
-              Join thousands of freelancers, consultants and business owners
-              using FinWise to track income, manage taxes and stay compliant.
-            </p>
-          </div>
-        </div>
+      border
+      border-gray-200
+      dark:border-zinc-800
 
-        <div className="space-y-5">
-          <div className="flex items-center gap-3">
-            <div className="w-2 h-2 rounded-full bg-white" />
-            GST & Tax Tracking
-          </div>
+      text-gray-700
+      dark:text-gray-300
 
-          <div className="flex items-center gap-3">
-            <div className="w-2 h-2 rounded-full bg-white" />
-            Professional Invoicing
-          </div>
+      px-4 py-2.5
+      rounded-xl
 
-          <div className="flex items-center gap-3">
-            <div className="w-2 h-2 rounded-full bg-white" />
-            Expense Management
-          </div>
+      shadow-sm
+      hover:shadow-lg
+      hover:scale-105
 
-          <div className="flex items-center gap-3">
-            <div className="w-2 h-2 rounded-full bg-white" />
-            Smart Business Insights
-          </div>
-        </div>
+      transition-all
+      duration-200
+      "
+    >
+      <ArrowLeft size={16} />
+      Back
+    </button>
+  </div>
 
-        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
+  {/* Content */}
+  <div className="relative z-10">
+    <div className="flex items-center gap-4">
+      <Image
+        src="/logo/finwise-icon.png"
+        alt="FinWise"
+        width={60}
+        height={60}
+        className="rounded-2xl border border-white/20 shadow-lg"
+      />
+
+      <div>
+        <h1 className="text-3xl font-bold">FinWise</h1>
+
+        <p className="text-white/80">India</p>
       </div>
+    </div>
+
+    <div className="mt-16">
+      <h2 className="text-6xl font-bold leading-tight max-w-xl">
+        Build Your Financial Command Center
+      </h2>
+
+      <p className="mt-6 text-xl text-white/80 max-w-lg">
+        Join thousands of freelancers, consultants and business owners using
+        FinWise to track income, manage taxes and stay compliant.
+      </p>
+    </div>
+  </div>
+
+  {/* Features */}
+  <div className="relative z-10 space-y-5">
+    <div className="flex items-center gap-3">
+      <div className="w-2 h-2 rounded-full bg-white" />
+      GST & Tax Tracking
+    </div>
+
+    <div className="flex items-center gap-3">
+      <div className="w-2 h-2 rounded-full bg-white" />
+      Professional Invoicing
+    </div>
+
+    <div className="flex items-center gap-3">
+      <div className="w-2 h-2 rounded-full bg-white" />
+      Expense Management
+    </div>
+
+    <div className="flex items-center gap-3">
+      <div className="w-2 h-2 rounded-full bg-white" />
+      Smart Business Insights
+    </div>
+  </div>
+</div>
 
       {/* Right Side */}
       <div

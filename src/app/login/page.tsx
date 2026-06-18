@@ -110,20 +110,45 @@ grid lg:grid-cols-2
     >
       {/* Left Side */}
       <div
-        className="
+  className="
 hidden lg:flex
 relative
 flex-col
 justify-between
 p-16
-bg-gradient-to-br
-from-emerald-600
-via-emerald-700
-to-emerald-900
 text-white
 overflow-hidden
 "
-      >
+>
+  {/* Background Video */}
+  <video
+    autoPlay
+    muted
+    loop
+    playsInline
+    className="
+    absolute
+    inset-0
+    w-full
+    h-full
+    object-cover
+    blur-sm
+    "
+  >
+    <source src="/landing/bg-video-1.mp4" type="video/mp4" />
+  </video>
+
+  {/* Dark Overlay */}
+  <div
+    className="
+    absolute
+    inset-0
+    bg-black/55
+    "
+  />
+
+  {/* Content Container */}
+  <div className="relative z-10 flex flex-col justify-between h-full">
         <div className="fixed top-6 right-6 z-50">
   <button
     onClick={() => router.back()}
@@ -213,6 +238,7 @@ overflow-hidden
 
         {/* Decorative Blur */}
         <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
+      </div>
       </div>
 
       {/* Right Side */}
