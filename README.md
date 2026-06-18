@@ -1,8 +1,8 @@
 # FinWise India
 
->**Version:** 1.2.1 
+>**Version:** 1.3.0
 >
->**Release Date:** June 18, 2026
+>**Release Date:** June 19, 2026
 
 
 ---
@@ -10,34 +10,62 @@ Smart Finance & Tax Management Platform for Indian Freelancers, Consultants, Age
 
 ---
 
-## What's new in v1.2.1  ( Dark Mode & UI Stability Update )
+## What's new in v1.3.0  ( Major Visual & Branding Update - Landing, Login in & Sign up page)
 
-Added
+Brand Identity
 
-- Dark mode support for Landing, Login, Signup and Onboarding Page
-- Official Google logo for Login and Signup authentication
+- Introduced official FinWise India branding
+- Added custom FinWise logo across the platform
+- Updated sidebar branding with logo integration
+- Added favicon support for browser tabs
+- Unified visual identity throughout the application
 
-Improved
+Landing Page Redesign
 
-- Dashboard cards redesigned for better dark mode appearance
-- Expense page colors adjusted for improved readability
-- Invoice statistics cards updated for dark theme consistency
-- Authentication screens now have consistent dark mode styling
-- Better contrast across forms, cards and tables
+- Complete landing page overhaul
+- Modern premium SaaS design
+- Large hero section with immersive video background
+- Animated statistics section
+- Feature showcase redesign
+- Full-width video CTA sections
+- Improved mobile responsiveness (Landing, Login in & Sign up page)
+- Enhanced dark mode experience
 
-Fixed
+Authentication Experience
 
-- White text appearing on white backgrounds
-- Dark mode hydration mismatch issue
-- Missing dropdown arrows in onboarding and invoice filters
-- Invoice status selector dark mode styling issues
-- Invoice status color inconsistencies
-- Expense amount colors being too bright in dark mode
-- Add Expense button color mismatch
+- Complete redesign of Login page
+- Complete redesign of Sign Up page
+- Professional split-screen layout
+- Full-screen video backgrounds
+- Premium glassmorphism styling
+- Improved branding integration
+- Enhanced dark mode support
 
-Removed
+Navigation Improvements
 
-- Dashboard quick action buttons for a cleaner interface
+- Added Back button support
+- Uses browser history navigation instead of fixed home redirects
+- Improved button styling and interactions
+- Better desktop and mobile placement
+- Added proper hover states and cursor feedback
+
+UI/UX Enhancements
+
+- Improved component consistency
+- Better spacing and alignment across pages
+- Refined card designs
+- Enhanced button styling
+- Improved logo positioning and sidebar layout
+- Better responsiveness on all screen sizes
+- More polished visual effects and animations
+
+Performance & Polish
+
+- Fixed multiple UI inconsistencies
+- Improved dark mode compatibility
+- Enhanced visual coherence across the platform
+- Refined overall user experience
+
 ---
 
 
