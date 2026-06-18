@@ -266,20 +266,7 @@ bg-gray-50 dark:bg-zinc-950
             onGoogle={googleLogin}
           />
 
-          <button
-            onClick={() => router.push("/")}
-            className="
-lg:hidden
-w-full
-mt-4
-text-sm
-text-gray-500
-dark:text-gray-400
-hover:text-emerald-600
-"
-          >
-            ← Back to Home
-          </button>
+  
         </div>
       </div>
     </main>
