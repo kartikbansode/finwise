@@ -1,6 +1,6 @@
 # FinWise India
 
->**Version:** 1.2.1 ( Dark Mode & UI Stability Update )
+>**Version:** 1.2.1 
 >
 >**Release Date:** June 18, 2026
 
@@ -10,7 +10,7 @@ Smart Finance & Tax Management Platform for Indian Freelancers, Consultants, Age
 
 ---
 
-## What's new in v1.2.1
+## What's new in v1.2.1  ( Dark Mode & UI Stability Update )
 
 Added
 
