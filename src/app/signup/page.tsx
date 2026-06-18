@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase";
+import Image from "next/image";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -288,16 +289,17 @@ focus:ring-emerald-500
             className="
 w-full
 border border-gray-300 dark:border-zinc-700
+bg-white dark:bg-zinc-900
 text-gray-900 dark:text-white
 py-3 rounded-xl
 flex justify-center items-center gap-3
 hover:bg-gray-50 dark:hover:bg-zinc-800
+transition-colors
 "
           >
-            <div className="w-5 h-5 rounded-full bg-white border flex items-center justify-center text-xs font-bold">
-              G
-            </div>
-            Continue with Google
+            <Image src="/google.svg" alt="Google" width={20} height={20} />
+
+            <span>Continue with Google</span>
           </button>
         </div>
 
