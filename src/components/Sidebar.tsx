@@ -72,26 +72,24 @@ dark:bg-zinc-950
 border-r
 dark:border-zinc-800 fixed left-0 top-0 flex flex-col"
     >
-      <div
-        className="
-  h-20
-  px-6
-  flex
-  items-center
-  border-b
-  border-gray-200
-  dark:border-zinc-800
-"
-      >
-        <div className="flex items-center gap-3">
-          <Image
-            src="/logo/finwise-large-black1.png"
-            alt="FinWise"
-            width={180}
-            height={50}
-            className="shrink-0"
-          />
-        </div>
+      <div className="flex items-center gap-3">
+        {/* Light Mode Logo */}
+        <Image
+          src="/logo/finwise-large-white1.png"
+          alt="FinWise"
+          width={180}
+          height={50}
+          className="block dark:hidden shrink-0"
+        />
+
+        {/* Dark Mode Logo */}
+        <Image
+          src="/logo/finwise-large-white1.png"
+          alt="FinWise"
+          width={180}
+          height={50}
+          className="hidden dark:block shrink-0"
+        />
       </div>
 
       <div className="p-4 pt-5 flex-1">
