@@ -1,6 +1,6 @@
 # FinWise India
 
->**Version:** 1.3.0
+>**Version:** 1.3.1
 >
 >**Release Date:** June 19, 2026
 
@@ -10,61 +10,35 @@ Smart Finance & Tax Management Platform for Indian Freelancers, Consultants, Age
 
 ---
 
-## What's new in v1.3.0  ( Major Visual & Branding Update - Landing, Login in & Sign up page)
+## What's new in v1.3.1  
 
-Brand Identity
+Authentication Experience Upgrade
 
-- Introduced official FinWise India branding
-- Added custom FinWise logo across the platform
-- Updated sidebar branding with logo integration
-- Added favicon support for browser tabs
-- Unified visual identity throughout the application
+- Complete redesign of Login & Signup pages with premium glassmorphism UI.
+- Full-screen animated video backgrounds.
+- Improved desktop and mobile layouts.
 
-Landing Page Redesign
+Mobile UX Improvements
 
-- Complete landing page overhaul
-- Modern premium SaaS design
-- Large hero section with immersive video background
-- Animated statistics section
-- Feature showcase redesign
-- Full-width video CTA sections
-- Improved mobile responsiveness (Landing, Login in & Sign up page)
-- Enhanced dark mode experience
+- Responsive Login & Signup pages.
+- Optimized logo, back button, and form positioning.
+- Better spacing and alignment across all screen sizes.
 
-Authentication Experience
+Dark Mode Standardization
 
-- Complete redesign of Login page
-- Complete redesign of Sign Up page
-- Professional split-screen layout
-- Full-screen video backgrounds
-- Premium glassmorphism styling
-- Improved branding integration
-- Enhanced dark mode support
+- Landing, Login and Signup page now use a consistent dark-first experience.
+- Unified colors, inputs, buttons, alerts, and typography.
 
-Navigation Improvements
+Authentication Improvements
 
-- Added Back button support
-- Uses browser history navigation instead of fixed home redirects
-- Improved button styling and interactions
-- Better desktop and mobile placement
-- Added proper hover states and cursor feedback
+- Added email and password validation.
+- Improved signup validation and error handling.
+- Enhanced success/error notification styling.
 
-UI/UX Enhancements
+Branding Updates
 
-- Improved component consistency
-- Better spacing and alignment across pages
-- Refined card designs
-- Enhanced button styling
-- Improved logo positioning and sidebar layout
-- Better responsiveness on all screen sizes
-- More polished visual effects and animations
-
-Performance & Polish
-
-- Fixed multiple UI inconsistencies
-- Improved dark mode compatibility
-- Enhanced visual coherence across the platform
-- Refined overall user experience
+- New FinWise logo integration across authentication pages and sidebar.
+- Improved logo alignment and theme-aware branding support.
 
 ---
 

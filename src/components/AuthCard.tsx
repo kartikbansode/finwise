@@ -32,7 +32,6 @@ bg-black/55
 backdrop-blur-2xl
 
 border border-white/10
-focus-within:border-emerald-500/70
 transition-colors
 
 shadow-[0_25px_80px_rgba(0,0,0,0.45)]
@@ -143,7 +142,6 @@ text-white
 py-3 rounded-xl
 font-medium
 hover:bg-black/40
-transition-colors
 text-center block
 "
         >
