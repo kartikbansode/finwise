@@ -9,6 +9,7 @@ import UserDropdown from "@/components/UserDropdown";
 import { calculateHealthScore } from "@/lib/healthScore";
 import IncomeTrendChart from "@/components/charts/IncomeTrendChart";
 import ExpensePieChart from "@/components/charts/ExpensePieChart";
+import MobileBlocker from "@/components/MobileBlocker";
 
 import {
   calculateFullTaxBreakdown,
@@ -173,7 +174,8 @@ dark:text-gray-400 mt-2"
   const nextDue = getNextAdvanceTaxDueDate();
 
   return (
-    <main className="ml-64 min-h-screen bg-gray-50 dark:bg-zinc-950 p-6 md:p-10">
+    <><MobileBlocker />
+    <main className="ml-64 min-h-screen bg-gray-50 dark:bg-zinc-950 p-6 md:p-10 hidden lg:block">
       <div className="w-full">
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-6 mb-6">
           <div
@@ -466,5 +468,6 @@ dark:text-white"
         <TaxDisclaimer />
       </div>
     </main>
+    </>
   );
 }

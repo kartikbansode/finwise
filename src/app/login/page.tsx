@@ -159,7 +159,7 @@ export default function LoginPage() {
   scale-110
   "
       >
-        <source src="/landing/bg-video-1.mp4" type="video/mp4" />
+        <source src="/landing/login-video.mp4" type="video/mp4" />
       </video>
 
       <div className="absolute inset-0 bg-black/65" />

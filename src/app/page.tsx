@@ -59,10 +59,10 @@ export default function LandingPage() {
               Features
             </a>
             <a
-              href="#tax"
+              href="#pricing"
               className="text-sm hover:text-emerald-600 transition"
             >
-              Tax Center
+              Pricing
             </a>
             <a
               href="#why"
@@ -167,7 +167,7 @@ h-full
 object-cover
 "
         >
-          <source src="/landing/hero-video.mp4" type="video/mp4" />
+          <source src="/landing/hero-video-main.mp4" type="video/mp4" />
         </video>
 
         {/* Dark Overlay */}
@@ -326,11 +326,11 @@ mx-auto
 
       {/* 3D Dashboard Showcase. */}
       <motion.section
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        className="py-20 md:py-32 px-4 md:px-6 max-w-7xl mx-auto"
-      >
+  initial={{ opacity: 0 }}
+  whileInView={{ opacity: 1 }}
+  transition={{ duration: 0.8 }}
+  className="hidden lg:block py-32 px-6 max-w-7xl mx-auto"
+>
         <div className="relative">
           {/* Main Dashboard Image with 3D effect */}
           <motion.div
@@ -441,7 +441,7 @@ md:py-36
     object-cover
     "
         >
-          <source src="/landing/bg-video-1.mp4" type="video/mp4" />
+          <source src="/landing/feature-video.mp4" type="video/mp4" />
         </video>
 
         {/* Dark Overlay */}
@@ -637,132 +637,7 @@ shadow-black/50
         </div>
       </section>
 
-      {/* Interactive Tax Calculator */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        id="tax"
-        className="py-20 md:py-32 px-4 md:px-6 max-w-7xl mx-auto"
-      >
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 md:mb-16">
-          See Your Tax Liability in Real Time
-        </h2>
-
-        <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="bg-zinc-900 rounded-3xl p-8 md:p-10 border border-zinc-800"
-          >
-            <div className="mb-8">
-              <label className="block text-sm font-semibold mb-3">
-                Annual Income
-              </label>
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-semibold">
-                  ₹
-                </span>
-                <input
-                  type="range"
-                  min="0"
-                  max="5000000"
-                  step="50000"
-                  value={income}
-                  onChange={(e) => setIncome(Number(e.target.value))}
-                  className="w-full h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-emerald-600"
-                />
-              </div>
-              <div className="text-right mt-3 text-2xl font-bold text-emerald-600">
-                {(income / 100000).toFixed(1)}L
-              </div>
-            </div>
-
-            <div className="mb-8">
-              <label className="block text-sm font-semibold mb-3">
-                Annual Expenses
-              </label>
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-semibold">
-                  ₹
-                </span>
-                <input
-                  type="range"
-                  min="0"
-                  max={income}
-                  step="50000"
-                  value={expenses}
-                  onChange={(e) => setExpenses(Number(e.target.value))}
-                  className="w-full h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-emerald-600"
-                />
-              </div>
-              <div className="text-right mt-3 text-2xl font-bold text-emerald-600">
-                {(expenses / 100000).toFixed(1)}L
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="bg-gradient-to-br from-emerald-900/10 to-teal-900/10 rounded-3xl p-8 md:p-10 border border-emerald-800"
-          >
-            <h3 className="text-2xl font-bold mb-8">Tax Estimate</h3>
-
-            {(() => {
-              const netIncome = income - expenses;
-              const taxableIncome = Math.max(0, netIncome - 250000); // Basic exemption
-              let tax = 0;
-
-              // Simple slab calculation
-              if (taxableIncome > 1000000) {
-                tax = 250000 + (taxableIncome - 1000000) * 0.3;
-              } else if (taxableIncome > 500000) {
-                tax = (taxableIncome - 500000) * 0.2;
-              } else if (taxableIncome > 250000) {
-                tax = (taxableIncome - 250000) * 0.05;
-              }
-
-              const gst = (income * 0.18) / 100;
-
-              return (
-                <div className="space-y-4">
-                  <div className="flex justify-between py-3 border-b border-emerald-200 dark:border-emerald-800">
-                    <span>Net Income</span>
-                    <span className="font-semibold">
-                      ₹{(netIncome / 100000).toFixed(1)}L
-                    </span>
-                  </div>
-                  <div className="flex justify-between py-3 border-b border-emerald-200 dark:border-emerald-800">
-                    <span>Estimated Income Tax</span>
-                    <span className="font-semibold">
-                      ₹{(tax / 100000).toFixed(1)}L
-                    </span>
-                  </div>
-                  <div className="flex justify-between py-3 border-b border-emerald-200 dark:border-emerald-800">
-                    <span>GST (Approx)</span>
-                    <span className="font-semibold">
-                      ₹{(gst / 100000).toFixed(1)}L
-                    </span>
-                  </div>
-                  <div className="flex justify-between py-3 bg-emerald-100 dark:bg-emerald-900/30 px-4 rounded-lg">
-                    <span className="font-semibold">Total Tax Liability</span>
-                    <span className="font-bold text-emerald-700 dark:text-emerald-400">
-                      ₹{((tax + gst) / 100000).toFixed(1)}L
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-400 mt-6 pt-6 border-t border-emerald-200 dark:border-emerald-800">
-                    This is an estimate based on standard tax slabs. Consult a
-                    tax professional for accurate calculations.
-                  </p>
-                </div>
-              );
-            })()}
-          </motion.div>
-        </div>
-      </motion.section>
+     
 
       {/* Why FinWise */}
       <motion.section
@@ -938,7 +813,7 @@ h-full
 object-cover
 "
         >
-          <source src="/landing/cta-bgvideo.mp4" type="video/mp4" />
+          <source src="/landing/cta-video.mp4" type="video/mp4" />
         </video>
 
         {/* Dark Overlay */}

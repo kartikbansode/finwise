@@ -188,7 +188,7 @@ export default function SignupPage() {
   scale-110
   "
       >
-        <source src="/landing/cta-bgvideo.mp4" type="video/mp4" />
+        <source src="/landing/signup-video.mp4" type="video/mp4" />
       </video>
 
       <div className="absolute inset-0 bg-black/65 pointer-events-none" />
