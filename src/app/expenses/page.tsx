@@ -740,7 +740,7 @@ focus:ring-emerald-500
                 <option value="personal">Personal</option>
               </select>
             </div>
-            <div className="grid md:grid-cols-2 gap-4">
+            <div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Recurring Schedule
@@ -829,7 +829,6 @@ px-3 py-2
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              rows={3}
               placeholder="Optional notes..."
               className="
 w-full
