@@ -741,19 +741,6 @@ focus:ring-emerald-500
               </select>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
-              <label className="flex items-center gap-3">
-                <input
-                  type="checkbox"
-                  checked={gstPaid}
-                  onChange={(e) => setGstPaid(e.target.checked)}
-                  className="h-4 w-4"
-                />
-
-                <span className="text-sm text-gray-700 dark:text-gray-300">
-                  GST Paid
-                </span>
-              </label>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Recurring Schedule
@@ -790,6 +777,26 @@ px-3 py-2
                   <option value="custom">Custom</option>
                 </select>
               </div>
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  GST Paid
+                </label>
+
+                <button
+                  type="button"
+                  onClick={() => setGstPaid(!gstPaid)}
+                  className={`w-12 h-6 rounded-full relative transition ${
+                    gstPaid ? "bg-emerald-600" : "bg-gray-300 dark:bg-zinc-700"
+                  }`}
+                >
+                  <span
+                    className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition ${
+                      gstPaid ? "translate-x-6" : ""
+                    }`}
+                  />
+                </button>
+              </div>
+
               {recurringFrequency === "custom" && (
                 <div className="mt-3">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
