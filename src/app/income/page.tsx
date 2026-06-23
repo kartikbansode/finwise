@@ -711,12 +711,12 @@ focus:ring-emerald-500
   bg-white dark:bg-zinc-900
   border border-gray-200 dark:border-zinc-800
   rounded-xl
-  overflow-hidden mb-6
+  overflow-hidden mb-8
 "
         >
           {filteredEntries.length === 0 ? (
             <p className="p-5 text-sm dark:text-gray-400">
-              No income logged yet.
+              No income logged.
             </p>
           ) : (
             <table className="w-full text-sm">
