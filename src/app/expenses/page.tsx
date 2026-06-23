@@ -28,6 +28,7 @@ interface ExpenseEntry {
   gst_paid: boolean;
   payment_method: string;
   recurring: boolean;
+  recurring_frequency: string;
   business_personal: string;
   notes: string | null;
   entry_date: string;
@@ -63,7 +64,7 @@ export default function ExpensesPage() {
   const [expenseType, setExpenseType] = useState("variable");
   const [gstPaid, setGstPaid] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("bank_transfer");
-  const [recurring, setRecurring] = useState(false);
+  const [recurringFrequency, setRecurringFrequency] = useState("one_time");
   const [businessPersonal, setBusinessPersonal] = useState("business");
   const [dateFilter, setDateFilter] = useState("this_month");
   const [notes, setNotes] = useState("");
@@ -125,7 +126,12 @@ export default function ExpensesPage() {
 
         payment_method: paymentMethod,
 
-        recurring,
+        recurring: recurringFrequency !== "one_time",
+
+        recurring_frequency:
+          recurringFrequency === "custom"
+            ? `custom_${customMonths}`
+            : recurringFrequency,
 
         business_personal: businessPersonal,
 
@@ -150,7 +156,9 @@ export default function ExpensesPage() {
 
       setPaymentMethod("bank_transfer");
 
-      setRecurring(false);
+      setRecurringFrequency("one_time");
+
+      setCustomMonths("1");
 
       setBusinessPersonal("business");
 
@@ -328,6 +336,8 @@ export default function ExpensesPage() {
   const personalExpense = filteredEntries
     .filter((entry) => entry.business_personal === "personal")
     .reduce((sum, entry) => sum + Number(entry.amount), 0);
+
+  const [customMonths, setCustomMonths] = useState("1");
 
   const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
@@ -744,18 +754,64 @@ focus:ring-emerald-500
                 </span>
               </label>
 
-              <label className="flex items-center gap-3">
-                <input
-                  type="checkbox"
-                  checked={recurring}
-                  onChange={(e) => setRecurring(e.target.checked)}
-                  className="h-4 w-4"
-                />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Recurring Schedule
+                </label>
 
-                <span className="text-sm text-gray-700 dark:text-gray-300">
-                  Recurring Expense
-                </span>
-              </label>
+                <select
+                  value={recurringFrequency}
+                  onChange={(e) => setRecurringFrequency(e.target.value)}
+                  className="
+w-full
+bg-white dark:bg-zinc-950
+border border-gray-300 dark:border-zinc-700
+text-gray-900 dark:text-white
+rounded-lg
+px-3 py-2
+"
+                >
+                  <option value="one_time">One Time</option>
+
+                  <option value="daily">Daily</option>
+
+                  <option value="weekly">Weekly</option>
+
+                  <option value="monthly">Monthly</option>
+
+                  <option value="2_months">Every 2 Months</option>
+
+                  <option value="3_months">Every 3 Months</option>
+
+                  <option value="6_months">Every 6 Months</option>
+
+                  <option value="yearly">Yearly</option>
+
+                  <option value="custom">Custom</option>
+                </select>
+              </div>
+              {recurringFrequency === "custom" && (
+                <div className="mt-3">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Custom Interval (Months)
+                  </label>
+
+                  <input
+                    type="number"
+                    min="1"
+                    value={customMonths}
+                    onChange={(e) => setCustomMonths(e.target.value)}
+                    className="
+w-full
+bg-white dark:bg-zinc-950
+border border-gray-300 dark:border-zinc-700
+text-gray-900 dark:text-white
+rounded-lg
+px-3 py-2
+"
+                  />
+                </div>
+              )}
             </div>
           </div>
           <div>
@@ -883,11 +939,10 @@ disabled:opacity-50
                     </td>
 
                     <td className="px-4 py-3">
-                      {entry.recurring ? (
-                        <span className="text-blue-500">Monthly</span>
-                      ) : (
-                        <span className="text-gray-400">One-time</span>
-                      )}
+                      <span className="text-blue-500 capitalize">
+                        {entry.recurring_frequency?.replaceAll("_", " ") ||
+                          "One Time"}
+                      </span>
                     </td>
 
                     <td className="px-4 py-3 text-gray-500 dark:text-gray-400">
