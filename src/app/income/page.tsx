@@ -238,6 +238,17 @@ export default function IncomePage() {
     month,
     revenue,
   }));
+  const monthlyEntries = Object.entries(revenueByMonth);
+
+  const bestMonth =
+    monthlyEntries.length > 0
+      ? monthlyEntries.reduce((a, b) => (a[1] > b[1] ? a : b))
+      : null;
+
+  const weakestMonth =
+    monthlyEntries.length > 0
+      ? monthlyEntries.reduce((a, b) => (a[1] < b[1] ? a : b))
+      : null;
   const topClients = Object.entries(clientTotals)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5);
@@ -512,6 +523,52 @@ export default function IncomePage() {
               ))}
             </div>
           )}
+        </div>
+        <div className="grid md:grid-cols-2 gap-4 mb-8">
+          <div
+            className="
+    bg-white dark:bg-zinc-900
+    border border-emerald-500/20
+    rounded-xl
+    p-6
+    "
+          >
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Best Revenue Month
+            </p>
+
+            <h3 className="text-xl font-bold text-emerald-500 mt-2">
+              {bestMonth?.[0] || "-"}
+            </h3>
+
+            <p className="mt-2 text-2xl font-bold">
+              ₹{bestMonth ? Number(bestMonth[1]).toLocaleString("en-IN") : "0"}
+            </p>
+          </div>
+
+          <div
+            className="
+    bg-white dark:bg-zinc-900
+    border border-red-500/20
+    rounded-xl
+    p-6
+    "
+          >
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Lowest Revenue Month
+            </p>
+
+            <h3 className="text-xl font-bold text-red-500 mt-2">
+              {weakestMonth?.[0] || "-"}
+            </h3>
+
+            <p className="mt-2 text-2xl font-bold">
+              ₹
+              {weakestMonth
+                ? Number(weakestMonth[1]).toLocaleString("en-IN")
+                : "0"}
+            </p>
+          </div>
         </div>
 
         <form
