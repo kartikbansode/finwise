@@ -647,18 +647,27 @@ focus:ring-emerald-500
             </div>
           </div>
           <div className="grid md:grid-cols-2 gap-4">
-            <label className="flex items-center gap-3">
-              <input
-                type="checkbox"
-                checked={gstIncluded}
-                onChange={(e) => setGstIncluded(e.target.checked)}
-                className="h-4 w-4"
-              />
-
-              <span className="text-sm text-gray-700 dark:text-gray-300">
+            <div className="flex items-center justify-between">
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 GST Included
-              </span>
-            </label>
+              </label>
+
+              <button
+                type="button"
+                onClick={() => setGstIncluded(!gstIncluded)}
+                className={`w-12 h-6 rounded-full relative transition ${
+                  gstIncluded
+                    ? "bg-emerald-600"
+                    : "bg-gray-300 dark:bg-zinc-700"
+                }`}
+              >
+                <span
+                  className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition ${
+                    gstIncluded ? "translate-x-6" : ""
+                  }`}
+                />
+              </button>
+            </div>
 
             <label className="flex items-center gap-3">
               <input
