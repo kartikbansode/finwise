@@ -1,7 +1,26 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import PageLoader from "@/components/PageLoader";
 
 export default function CookiePolicyPage() {
+  const [pageLoaded, setPageLoaded] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setPageLoaded(true);
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!pageLoaded) {
+    return (
+      <PageLoader title="Cookie Policy" subtitle="Preparing legal documents" />
+    );
+  }
   return (
     <main className="min-h-screen bg-zinc-950 text-zinc-300">
       <div className="max-w-4xl mx-auto px-6 py-16 md:px-10 md:py-24">
@@ -19,8 +38,8 @@ export default function CookiePolicyPage() {
           </h1>
 
           <p className="mt-5 text-lg text-zinc-400 max-w-2xl mx-auto">
-            Learn how FinWise uses cookies and similar technologies to
-            improve security, functionality and user experience.
+            Learn how FinWise uses cookies and similar technologies to improve
+            security, functionality and user experience.
           </p>
 
           <p className="mt-6 text-sm text-zinc-500">
@@ -47,9 +66,8 @@ export default function CookiePolicyPage() {
             </h2>
 
             <p>
-              FinWise uses cookies and similar technologies to maintain
-              account security, remember preferences and improve platform
-              performance.
+              FinWise uses cookies and similar technologies to maintain account
+              security, remember preferences and improve platform performance.
             </p>
           </section>
 
@@ -59,8 +77,8 @@ export default function CookiePolicyPage() {
             </h2>
 
             <p>
-              Essential cookies are required for core platform functionality
-              and cannot be disabled.
+              Essential cookies are required for core platform functionality and
+              cannot be disabled.
             </p>
 
             <ul className="list-disc ml-6 mt-4 space-y-2">
@@ -95,8 +113,8 @@ export default function CookiePolicyPage() {
 
             <p>
               Users can choose whether to allow optional analytics cookies.
-              Essential cookies remain active because they are necessary for
-              the operation and security of the platform.
+              Essential cookies remain active because they are necessary for the
+              operation and security of the platform.
             </p>
           </section>
 
@@ -106,9 +124,8 @@ export default function CookiePolicyPage() {
             </h2>
 
             <p>
-              We may update this Cookie Policy periodically to reflect
-              changes in technology, legal requirements or platform
-              functionality.
+              We may update this Cookie Policy periodically to reflect changes
+              in technology, legal requirements or platform functionality.
             </p>
           </section>
 
@@ -117,9 +134,7 @@ export default function CookiePolicyPage() {
               7. Contact
             </h2>
 
-            <p>
-              Questions regarding this Cookie Policy may be directed to:
-            </p>
+            <p>Questions regarding this Cookie Policy may be directed to:</p>
 
             <p className="mt-4 text-emerald-400 font-medium">
               bansodekartik@hotmail.com

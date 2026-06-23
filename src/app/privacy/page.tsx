@@ -1,7 +1,26 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import PageLoader from "@/components/PageLoader";
 
 export default function PrivacyPolicyPage() {
+  const [pageLoaded, setPageLoaded] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setPageLoaded(true);
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!pageLoaded) {
+    return (
+      <PageLoader title="Privacy Policy" subtitle="Preparing legal documents" />
+    );
+  }
   return (
     <main className="min-h-screen bg-zinc-950 text-zinc-300">
       <div className="max-w-4xl mx-auto px-6 py-16 md:px-10 md:py-24">
