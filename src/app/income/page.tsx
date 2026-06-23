@@ -4,6 +4,15 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase";
 import TaxDisclaimer from "@/components/TaxDisclaimer";
 import MobileBlocker from "@/components/MobileBlocker";
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+} from "recharts";
 
 interface IncomeEntry {
   id: string;
@@ -210,6 +219,26 @@ export default function IncomePage() {
     Object.entries(clientTotals).sort((a, b) => b[1] - a[1])[0]?.[0] || "-";
   const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
+  const revenueByMonth = filteredEntries.reduce(
+    (acc, entry) => {
+      const date = new Date(entry.entry_date);
+
+      const month = date.toLocaleString("en-IN", {
+        month: "short",
+      });
+
+      acc[month] = (acc[month] || 0) + Number(entry.amount);
+
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
+
+  const chartData = Object.entries(revenueByMonth).map(([month, revenue]) => ({
+    month,
+    revenue,
+  }));
+
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 1024);
@@ -265,6 +294,46 @@ export default function IncomePage() {
           </span>
         </p>
         <div className="grid md:grid-cols-4 gap-4 mb-8">
+          <div
+            className="
+  bg-white dark:bg-zinc-900
+  border border-gray-200 dark:border-zinc-800
+  rounded-xl
+  p-6
+  mb-8
+  "
+          >
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                Revenue Trend
+              </h3>
+
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Revenue over time
+              </p>
+            </div>
+
+            <div className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+
+                  <XAxis dataKey="month" />
+
+                  <YAxis />
+
+                  <Tooltip />
+
+                  <Area
+                    type="monotone"
+                    dataKey="revenue"
+                    stroke="#10b981"
+                    fill="#10b98120"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
           <div
             className="
     bg-white dark:bg-zinc-900
