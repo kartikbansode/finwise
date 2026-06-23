@@ -239,8 +239,45 @@ export default function IncomePage() {
     revenue,
   }));
   const topClients = Object.entries(clientTotals)
-  .sort((a, b) => b[1] - a[1])
-  .slice(0, 5);
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5);
+
+  const now = new Date();
+
+  const currentMonthRevenue = entries
+    .filter((entry) => {
+      const date = new Date(entry.entry_date);
+
+      return (
+        date.getMonth() === now.getMonth() &&
+        date.getFullYear() === now.getFullYear()
+      );
+    })
+    .reduce((sum, entry) => sum + Number(entry.amount), 0);
+
+  const previousMonth = new Date();
+
+  previousMonth.setMonth(previousMonth.getMonth() - 1);
+
+  const previousMonthRevenue = entries
+    .filter((entry) => {
+      const date = new Date(entry.entry_date);
+
+      return (
+        date.getMonth() === previousMonth.getMonth() &&
+        date.getFullYear() === previousMonth.getFullYear()
+      );
+    })
+    .reduce((sum, entry) => sum + Number(entry.amount), 0);
+
+  const revenueGrowth =
+    previousMonthRevenue === 0
+      ? 100
+      : (
+          ((currentMonthRevenue - previousMonthRevenue) /
+            previousMonthRevenue) *
+          100
+        ).toFixed(1);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -296,7 +333,7 @@ export default function IncomePage() {
             ₹{totalThisMonth.toLocaleString("en-IN")}
           </span>
         </p>
-        <div className="grid md:grid-cols-4 gap-4 mb-8">
+        <div className="grid md:grid-cols-5 gap-4 mb-8">
           <div
             className="
     bg-white dark:bg-zinc-900
@@ -360,6 +397,27 @@ export default function IncomePage() {
 
             <h3 className="text-2xl font-bold mt-2">{totalTransactions}</h3>
           </div>
+          <div
+            className="
+  bg-white dark:bg-zinc-900
+  border border-gray-200 dark:border-zinc-800
+  rounded-xl
+  p-5
+  "
+          >
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Revenue Growth
+            </p>
+
+            <h3
+              className={`text-2xl font-bold mt-2 ${
+                Number(revenueGrowth) >= 0 ? "text-emerald-500" : "text-red-500"
+              }`}
+            >
+              {Number(revenueGrowth) >= 0 ? "+" : ""}
+              {revenueGrowth}%
+            </h3>
+          </div>
         </div>
         <div
           className="
@@ -408,32 +466,29 @@ export default function IncomePage() {
           </div>
         </div>
         <div
-  className="
+          className="
   bg-white dark:bg-zinc-900
   border border-gray-200 dark:border-zinc-800
   rounded-xl
   p-6
   mb-8
   "
->
-  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
-    Top Clients
-  </h3>
-
-  {topClients.length === 0 ? (
-    <p className="text-gray-500 dark:text-gray-400">
-      No client data available.
-    </p>
-  ) : (
-    <div className="space-y-4">
-      {topClients.map(([client, amount], index) => (
-        <div
-          key={client}
-          className="flex items-center justify-between"
         >
-          <div className="flex items-center gap-3">
-            <div
-              className="
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
+            Top Clients
+          </h3>
+
+          {topClients.length === 0 ? (
+            <p className="text-gray-500 dark:text-gray-400">
+              No client data available.
+            </p>
+          ) : (
+            <div className="space-y-4">
+              {topClients.map(([client, amount], index) => (
+                <div key={client} className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="
               w-8 h-8
               rounded-full
               bg-emerald-500/10
@@ -441,23 +496,23 @@ export default function IncomePage() {
               flex items-center justify-center
               text-sm font-semibold
               "
-            >
-              {index + 1}
+                    >
+                      {index + 1}
+                    </div>
+
+                    <span className="font-medium text-gray-900 dark:text-white">
+                      {client}
+                    </span>
+                  </div>
+
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    ₹{Number(amount).toLocaleString("en-IN")}
+                  </span>
+                </div>
+              ))}
             </div>
-
-            <span className="font-medium text-gray-900 dark:text-white">
-              {client}
-            </span>
-          </div>
-
-          <span className="font-semibold text-gray-900 dark:text-white">
-            ₹{Number(amount).toLocaleString("en-IN")}
-          </span>
+          )}
         </div>
-      ))}
-    </div>
-  )}
-</div>
 
         <form
           onSubmit={handleAdd}
