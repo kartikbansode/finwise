@@ -22,6 +22,9 @@ export default function SettingsPage() {
 
   const [companyAddress, setCompanyAddress] = useState("");
 
+  const [deleteConfirm, setDeleteConfirm] = useState("");
+  const [deleting, setDeleting] = useState(false);
+
   useEffect(() => {
     async function load() {
       const { data: userData } = await supabase.auth.getUser();
@@ -91,6 +94,47 @@ export default function SettingsPage() {
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
   }
+
+  async function handleDeleteAccount() {
+    if (deleteConfirm !== "DELETE") return;
+
+    try {
+      setDeleting(true);
+
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) return;
+
+      const response = await fetch("/api/delete-account", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user.id,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error);
+      }
+
+      await supabase.auth.signOut();
+
+      window.location.href = "/";
+    } catch (error) {
+      console.error(error);
+
+      alert("Failed to delete account. Please try again.");
+    } finally {
+      setDeleting(false);
+    }
+  }
+
   if (isMobile === null) {
     return null;
   }
@@ -368,6 +412,69 @@ py-3
             )}
           </div>
         </form>
+        <div
+          className="
+  mt-8
+
+  bg-red-950/20
+  border border-red-500/20
+
+  rounded-xl
+  p-6
+  "
+        >
+          <h2 className="text-lg font-semibold text-red-400">Danger Zone</h2>
+
+          <p className="text-sm text-gray-400 mt-2">
+            Permanently delete your FinWise account and all associated data.
+            This action cannot be undone.
+          </p>
+
+          <div className="mt-5">
+            <label className="block text-sm text-gray-300 mb-2">
+              Type DELETE to confirm
+            </label>
+
+            <input
+              value={deleteConfirm}
+              onChange={(e) => setDeleteConfirm(e.target.value)}
+              placeholder="DELETE"
+              className="
+      w-full
+
+      bg-zinc-950
+      border border-red-500/20
+
+      text-white
+
+      rounded-xl
+      px-4 py-3
+      "
+            />
+          </div>
+
+          <button
+            onClick={handleDeleteAccount}
+            disabled={deleteConfirm !== "DELETE" || deleting}
+            className="
+    mt-4
+
+    bg-red-600
+    hover:bg-red-700
+
+    disabled:opacity-50
+    disabled:cursor-not-allowed
+
+    text-white
+
+    px-5 py-3
+    rounded-xl
+    font-medium
+    "
+          >
+            {deleting ? "Deleting Account..." : "Delete Account"}
+          </button>
+        </div>
         <TaxDisclaimer />
       </div>
     </main>
