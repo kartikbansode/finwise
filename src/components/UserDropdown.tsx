@@ -15,6 +15,8 @@ export default function UserDropdown({ name, userType }: Props) {
   const supabase = createClient();
 
   const [open, setOpen] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -39,10 +41,6 @@ export default function UserDropdown({ name, userType }: Props) {
     await supabase.auth.signOut();
 
     router.replace("/login");
-
-    router.refresh();
-
-    router.push("/login");
   }
 
   return (
@@ -107,7 +105,10 @@ bg-zinc-900
 "
         >
           <button
-            onClick={() => router.push("/settings")}
+            onClick={() => {
+              setOpen(false);
+              router.push("/settings");
+            }}
             className="
 w-full
 px-4 py-3
@@ -124,27 +125,82 @@ transition
 
           <button
             onClick={() => {
-              const confirmed = window.confirm(
-                "Are you sure you want to logout?",
-              );
-
-              if (confirmed) {
-                logout();
-              }
+              setOpen(false);
+              setShowLogoutModal(true);
             }}
             className="
-w-full
-px-4 py-3
-text-left
-flex items-center gap-3
-text-red-400
-hover:bg-red-950/30
-transition
-"
+  w-full
+  px-4 py-3
+  text-left
+  flex items-center gap-3
+  text-red-400
+  hover:bg-red-950/30
+  transition
+  "
           >
             <LogOut size={16} />
             Logout
           </button>
+        </div>
+      )}
+      {showLogoutModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999]">
+          <div
+            className="
+      bg-white dark:bg-zinc-900
+      border border-gray-200 dark:border-zinc-800
+      rounded-2xl
+      p-6
+      w-full
+      max-w-md
+      "
+          >
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+              Logout
+            </h3>
+
+            <p className="text-gray-500 dark:text-gray-400 mb-6">
+              Are you sure you want to logout from FinWise?
+            </p>
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowLogoutModal(false)}
+                className="
+          px-4 py-2
+          rounded-xl
+          border border-gray-300
+          dark:border-zinc-700
+          "
+              >
+                Cancel
+              </button>
+
+              <button
+                disabled={loggingOut}
+                onClick={async () => {
+                  try {
+                    setLoggingOut(true);
+
+                    await logout();
+                  } finally {
+                    setLoggingOut(false);
+                  }
+                }}
+                className="
+          px-4 py-2
+          rounded-xl
+          bg-red-600
+          hover:bg-red-700
+          disabled:opacity-50
+          disabled:cursor-not-allowed
+          text-white
+          "
+              >
+                {loggingOut ? "Logging out..." : "Logout"}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
