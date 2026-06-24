@@ -12,11 +12,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import RevenueExpenseChart from "@/components/charts/RevenueExpenseChart";
 import { processRecurringExpenses } from "@/lib/processRecurringExpenses";
 
-import {
-  calculateFullTaxBreakdown,
-  getNextAdvanceTaxDueDate,
-  TaxRegime,
-} from "@/lib/taxLogic";
+import { calculateFullTaxBreakdown, TaxRegime } from "@/lib/taxLogic";
 import TaxDisclaimer from "@/components/TaxDisclaimer";
 
 export default function DashboardPage() {
@@ -231,13 +227,10 @@ export default function DashboardPage() {
 
       setUpcomingExpenses(upcomingExpensesData);
       const generatedInsights: string[] = [];
-      generatedInsights.push(
-        `Financial Health Score: ${healthScore.score}/100 (${healthScore.label})`,
-      );
-      if (monthlyIncome > monthlyExpenses) {
+      if (incomeTotal > expenseTotal) {
         generatedInsights.push("Business is currently profitable.");
-      } else if (monthlyExpenses > monthlyIncome) {
-        generatedInsights.push("Expenses currently exceed revenue.");
+      } else if (expenseTotal > incomeTotal) {
+        generatedInsights.unshift("Expenses are higher than income.");
       }
       const biggestVendor = Object.entries(vendorTotals).sort(
         (a: any, b: any) => b[1] - a[1],
@@ -259,16 +252,12 @@ export default function DashboardPage() {
           `${upcomingExpensesData.length} recurring obligations are scheduled.`,
         );
       }
-      if (monthlyIncome > 0) {
-        generatedInsights.push(
-          `Revenue recorded: ₹${monthlyIncome.toLocaleString("en-IN")}`,
-        );
-      }
-      if (monthlyExpenses > 0) {
-        generatedInsights.push(
-          `Expenses recorded: ₹${monthlyExpenses.toLocaleString("en-IN")}`,
-        );
-      }
+      const healthResult = calculateHealthScore(
+        incomeTotal,
+        expenseTotal,
+        profileData?.gst_registered ?? false,
+        profileData?.onboarding_completed ?? false,
+      );
 
       const grouped = (expenses || []).reduce((acc: any, item: any) => {
         const category = item.category || "Other";
@@ -353,7 +342,10 @@ export default function DashboardPage() {
 
       setCheckingAuth(false);
       setLoading(false);
-      setInsights(generatedInsights);
+      generatedInsights.unshift(
+        `Financial Health: ${healthResult.score}/100 (${healthResult.status})`,
+      );
+      setInsights(generatedInsights.slice(0, 3));
     }
 
     load();
@@ -446,15 +438,6 @@ export default function DashboardPage() {
     profile.monthly_expense_estimate || 0,
   );
 
-  const healthResult = calculateHealthScore(
-    monthlyIncome,
-    monthlyExpenses,
-    profile.gst_registered,
-    profile.onboarding_completed,
-  );
-
-  const healthScore = healthResult.score;
-
   const monthlyProfit = monthlyIncome - monthlyExpenses;
 
   const cashFlow = monthlyIncome - monthlyExpenses;
@@ -463,6 +446,7 @@ export default function DashboardPage() {
     0,
     monthlyIncome - monthlyExpenses - breakdown.incomeTax - breakdown.gstAmount,
   );
+  Math.max(0, breakdown.safeToSpend);
 
   const profitMargin =
     monthlyIncome > 0 ? Math.round((monthlyProfit / monthlyIncome) * 100) : 0;
@@ -470,12 +454,7 @@ export default function DashboardPage() {
   const savingsRate =
     monthlyIncome > 0 ? Math.round((monthlyProfit / monthlyIncome) * 100) : 0;
 
-  const expenseRatio =
-    monthlyIncome > 0 ? Math.round((monthlyExpenses / monthlyIncome) * 100) : 0;
-
   const taxReserve = breakdown.incomeTax;
-
-  const nextDue = getNextAdvanceTaxDueDate();
 
   return (
     <main className="ml-64 min-h-screen bg-gray-50 dark:bg-zinc-950 p-6 md:p-10">
@@ -512,7 +491,7 @@ export default function DashboardPage() {
           </select>
         </div>
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-6 mb-6">
-          <div className="grid lg:grid-cols-2 gap-6 mb-6">
+          <div className="grid lg:grid-cols-2 gap-6 mb-6 items-start">
             <div
               className="
     bg-white dark:bg-zinc-900
@@ -713,17 +692,6 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
-
-        {monthlyExpenses > monthlyIncome && (
-          <div
-            className="bg-red-50
-dark:bg-red-900/20 border border-red-200 rounded-xl p-4 mb-6"
-          >
-            <p className="font-medium text-red-700">
-              Expenses are higher than income this month.
-            </p>
-          </div>
-        )}
 
         <div className="mb-6 w-full hiddenscrollbar">
           <RevenueExpenseChart data={monthlyChartData} />
