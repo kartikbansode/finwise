@@ -465,57 +465,6 @@ export default function DashboardPage() {
     px-4 py-2
     "
           >
-            <option value="this_month">This Month</option>
-
-            <option value="last_month">Last Month</option>
-
-            <option value="last_3_months">Last 3 Months</option>
-
-            <option value="this_year">This Year</option>
-
-            <option value="all_time">All Time</option>
-          </select>
-        </div>
-        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-6 mb-6">
-          <div
-            className="bg-white
-dark:bg-zinc-900
-border
-dark:border-zinc-800 rounded-2xl p-8 lg:max-w-2xl"
-          >
-            <h2 className="text-4xl font-bold mt-3 text-gray-900 dark:text-white">
-              ₹{Math.max(0, breakdown.safeToSpend).toLocaleString("en-IN")}
-            </h2>
-
-            <p
-              className="text-gray-500
-dark:text-gray-400 mt-2"
-            >
-              Available Balance
-            </p>
-
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-6">
-              Estimated amount available after expenses, tax reserves, and
-              business obligations.
-            </p>
-          </div>
-        </div>
-        <div className="flex justify-end mb-4">
-          <select
-            value={dateFilter}
-            onChange={(e) => {
-              setLoading(true);
-              setDateFilter(e.target.value);
-            }}
-            className="
-    px-4 py-2
-    rounded-xl
-    border border-gray-200
-    dark:border-zinc-700
-    bg-white dark:bg-zinc-900
-    text-sm
-    "
-          >
             <option value="month">This Month</option>
             <option value="lastMonth">Last Month</option>
             <option value="3months">Last 3 Months</option>
@@ -523,6 +472,72 @@ dark:text-gray-400 mt-2"
             <option value="all">All Time</option>
           </select>
         </div>
+        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-6 mb-6">
+          <div className="grid lg:grid-cols-2 gap-6 mb-6">
+            <div
+              className="
+    bg-white dark:bg-zinc-900
+    border dark:border-zinc-800
+    rounded-2xl
+    p-8
+    "
+            >
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Financial Overview
+              </p>
+
+              <h2 className="text-4xl font-bold mt-3 text-gray-900 dark:text-white">
+                ₹{safeToSpend.toLocaleString("en-IN")}
+              </h2>
+
+              <p className="text-gray-500 dark:text-gray-400 mt-2">
+                Available Balance
+              </p>
+
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-6">
+                Estimated amount available after expenses, taxes and business
+                obligations.
+              </p>
+            </div>
+
+            <div
+              className="
+    bg-white dark:bg-zinc-900
+    border border-gray-200 dark:border-zinc-800
+    rounded-2xl
+    p-6
+    "
+            >
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-5">
+                Business Insights
+              </h3>
+
+              <div className="space-y-3">
+                {insights.map((insight, index) => (
+                  <div
+                    key={index}
+                    className="
+          flex items-start gap-3
+          text-gray-700 dark:text-gray-300
+          "
+                  >
+                    <div
+                      className="
+            w-2 h-2
+            rounded-full
+            bg-emerald-500
+            mt-2
+            "
+                    />
+
+                    <p>{insight}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-4 mb-6">
           <div className="rounded-2xl border border-emerald-500/20 bg-emerald-50 dark:bg-emerald-950/30 p-5">
             <p className="text-xs uppercase tracking-wide text-emerald-700 dark:text-emerald-400">
@@ -566,7 +581,7 @@ dark:text-gray-400 mt-2"
 
           <div className="rounded-2xl border border-amber-500/20 bg-amber-50 dark:bg-amber-950/30 p-5">
             <p className="text-xs uppercase tracking-wide text-amber-700 dark:text-amber-400">
-              Tax Reserve
+              Recommended Tax Reserve
             </p>
 
             <p className="text-2xl font-bold mt-3 text-amber-800 dark:text-amber-300">
@@ -615,7 +630,7 @@ dark:text-gray-400 mt-2"
             </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 gap-6">
             <div>
               <div className="flex justify-between mb-2">
                 <span className="text-sm text-gray-500">Profit Margin</span>
@@ -645,23 +660,6 @@ dark:text-gray-400 mt-2"
                   className="h-2 rounded-full bg-blue-500"
                   style={{
                     width: `${Math.min(savingsRate, 100)}%`,
-                  }}
-                />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex justify-between mb-2">
-                <span className="text-sm text-gray-500">Expense Ratio</span>
-
-                <span className="font-medium">{expenseRatio}%</span>
-              </div>
-
-              <div className="h-2 rounded-full bg-gray-200 dark:bg-zinc-800">
-                <div
-                  className="h-2 rounded-full bg-red-500"
-                  style={{
-                    width: `${Math.min(expenseRatio, 100)}%`,
                   }}
                 />
               </div>
@@ -781,136 +779,6 @@ dark:bg-red-900/20 border border-red-200 rounded-xl p-4 mb-6"
               </div>
             )}
           </div>
-        </div>
-        <div
-          className="
-  bg-white dark:bg-zinc-900
-  border border-gray-200 dark:border-zinc-800
-  rounded-2xl
-  p-6
-  mb-6
-  "
-        >
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-5">
-            Business Insights
-          </h3>
-
-          <div className="space-y-3">
-            {insights.map((insight, index) => (
-              <div
-                key={index}
-                className="
-        flex items-start gap-3
-        text-gray-700 dark:text-gray-300
-        "
-              >
-                <div
-                  className="
-          w-2 h-2
-          rounded-full
-          bg-emerald-500
-          mt-2
-          "
-                />
-
-                <p>{insight}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Tax Method */}
-        <div
-          className="bg-white
-dark:bg-zinc-900
-border
-dark:border-zinc-800 rounded-xl p-5 mb-6"
-        >
-          <h3 className="font-semibold mb-4">Tax Configuration</h3>
-
-          <div className="grid md:grid-cols-4 gap-4">
-            <div>
-              <p
-                className="text-xs text-gray-500
-dark:text-gray-400"
-              >
-                Method
-              </p>
-
-              <p className="font-semibold">
-                {profile.tax_method === "44ada"
-                  ? "44ADA"
-                  : profile.tax_method === "44ad"
-                    ? "44AD"
-                    : "Normal"}
-              </p>
-            </div>
-
-            <div>
-              <p
-                className="text-xs text-gray-500
-dark:text-gray-400"
-              >
-                Regime
-              </p>
-
-              <p className="font-semibold capitalize">{profile.tax_regime}</p>
-            </div>
-
-            <div>
-              <p
-                className="text-xs text-gray-500
-dark:text-gray-400"
-              >
-                GST
-              </p>
-
-              <p className="font-semibold">
-                {profile.gst_registered ? "Registered" : "Not Registered"}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <div
-            className="bg-white
-dark:bg-zinc-900
-border
-dark:border-zinc-800 rounded-xl border-gray-200 p-5"
-          >
-            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Next advance tax due
-            </p>
-            <p
-              className="text-xl font-semibold text-gray-900
-dark:text-white"
-            >
-              {nextDue}
-            </p>
-            <p
-              className="text-xs text-gray-500
-dark:text-gray-400 mt-1"
-            >
-              Est. ₹{breakdown.advanceTaxThisQuarter.toLocaleString("en-IN")}{" "}
-              this installment
-            </p>
-          </div>
-          {profile.user_type === "business" && (
-            <div
-              className="bg-white
-dark:bg-zinc-900
-border
-dark:border-zinc-800 rounded-xl border-gray-200 p-5"
-            >
-              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Expenses this month
-              </p>
-              <p className="text-xl font-semibold text-red-500 dark:text-red-400">
-                ₹{monthlyExpenses.toLocaleString("en-IN")}
-              </p>
-            </div>
-          )}
         </div>
 
         <TaxDisclaimer />

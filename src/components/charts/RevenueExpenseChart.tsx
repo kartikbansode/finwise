@@ -22,7 +22,7 @@ export default function RevenueExpenseChart({
       bg-white dark:bg-zinc-900
       border border-gray-200 dark:border-zinc-800
       rounded-2xl
-      p-6
+      p-6 mb-8
       "
     >
       <h3 className="text-lg font-semibold mb-6">
