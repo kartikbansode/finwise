@@ -43,6 +43,8 @@ export default function DashboardPage() {
   ];
   const [insights, setInsights] = useState<string[]>([]);
 
+  const [upcomingExpenses, setUpcomingExpenses] = useState<any[]>([]);
+
   const [topClients, setTopClients] = useState<[string, number][]>([]);
 
   const [topVendors, setTopVendors] = useState<[string, number][]>([]);
@@ -211,6 +213,21 @@ export default function DashboardPage() {
           .sort((a, b) => b[1] - a[1])
           .slice(0, 5),
       );
+
+      const today = new Date().toISOString().split("T")[0];
+
+      const { data: upcoming } = await supabase
+        .from("expense_entries")
+        .select("*")
+        .eq("user_id", userData.user.id)
+        .eq("recurring", true)
+        .gte("next_due_date", today)
+        .order("next_due_date", {
+          ascending: true,
+        })
+        .limit(5);
+
+      setUpcomingExpenses(upcoming || []);
       const generatedInsights: string[] = [];
       if (monthlyIncome > monthlyExpenses) {
         generatedInsights.push("Business is currently profitable.");
@@ -229,6 +246,11 @@ export default function DashboardPage() {
       if (biggestVendor) {
         generatedInsights.push(
           `${biggestVendor[0]} is your largest expense source.`,
+        );
+      }
+      if ((upcoming || []).length > 0) {
+        generatedInsights.push(
+          `${upcoming.length} recurring obligations are scheduled.`,
         );
       }
       if (monthlyIncome > 0) {
@@ -344,6 +366,15 @@ export default function DashboardPage() {
   }, []);
   if (isMobile === null) {
     return null;
+  }
+  function getDaysUntil(dateString: string) {
+    const today = new Date();
+
+    const target = new Date(dateString);
+
+    const diff = target.getTime() - today.getTime();
+
+    return Math.ceil(diff / (1000 * 60 * 60 * 24));
   }
 
   if (isMobile) {
@@ -782,7 +813,63 @@ dark:bg-red-900/20 border border-red-200 rounded-xl p-4 mb-6"
             )}
           </div>
         </div>
+        <div
+          className="
+  bg-white dark:bg-zinc-900
+  border border-gray-200 dark:border-zinc-800
+  rounded-2xl
+  p-6
+  mb-6
+  "
+        >
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-5">
+            Upcoming Obligations
+          </h3>
 
+          {upcomingExpenses.length === 0 ? (
+            <p className="text-gray-500 dark:text-gray-400">
+              No recurring expenses scheduled.
+            </p>
+          ) : (
+            <div className="space-y-4">
+              {upcomingExpenses.map((expense) => (
+                <div
+                  key={expense.id}
+                  className="
+          flex items-center
+          justify-between
+          border-b border-gray-100
+          dark:border-zinc-800
+          pb-3
+          "
+                >
+                  <div>
+                    <p className="font-medium text-gray-900 dark:text-white">
+                      {expense.description}
+                    </p>
+
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      ₹{Number(expense.amount).toLocaleString("en-IN")}
+                    </p>
+                  </div>
+
+                  <div className="text-right">
+                    <p className="font-medium text-emerald-600">
+                      {getDaysUntil(expense.next_due_date)} days
+                    </p>
+
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      Due{" "}
+                      {new Date(expense.next_due_date).toLocaleDateString(
+                        "en-IN",
+                      )}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
         <TaxDisclaimer />
       </div>
     </main>
