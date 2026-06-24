@@ -42,6 +42,8 @@ export default function DashboardPage() {
     "Almost ready...",
   ];
 
+  const [dateFilter, setDateFilter] = useState("this_month");
+
   const [messageIndex, setMessageIndex] = useState(() =>
     Math.floor(Math.random() * loadingMessages.length),
   );
@@ -61,6 +63,31 @@ export default function DashboardPage() {
 
     return () => clearInterval(interval);
   }, []);
+
+  function getStartDate(filter: string) {
+    const now = new Date();
+
+    switch (filter) {
+      case "last_month": {
+        return new Date(now.getFullYear(), now.getMonth() - 1, 1).toISOString();
+      }
+
+      case "last_3_months": {
+        const d = new Date();
+        d.setMonth(d.getMonth() - 3);
+        return d.toISOString();
+      }
+
+      case "this_year":
+        return new Date(now.getFullYear(), 0, 1).toISOString();
+
+      case "all_time":
+        return "2000-01-01";
+
+      default:
+        return new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+    }
+  }
 
   useEffect(() => {
     async function load() {
@@ -85,17 +112,13 @@ export default function DashboardPage() {
       }
 
       const now = new Date();
-      const startOfMonth = new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        1,
-      ).toISOString();
+      const startDate = getStartDate(dateFilter);
 
       const { data: incomeData } = await supabase
         .from("income_entries")
         .select("amount")
         .eq("user_id", userData.user.id)
-        .gte("entry_date", startOfMonth);
+        .gte("entry_date", startDate);
       const incomeTotal = (incomeData || []).reduce(
         (s, e) => s + Number(e.amount),
         0,
@@ -106,7 +129,7 @@ export default function DashboardPage() {
         .from("expense_entries")
         .select("*")
         .eq("user_id", userData.user.id)
-        .gte("entry_date", startOfMonth);
+        .gte("entry_date", startDate);
 
       const expenseTotal = (expenses || []).reduce(
         (s, e) => s + Number(e.amount),
@@ -135,7 +158,7 @@ export default function DashboardPage() {
     }
 
     load();
-  }, []);
+  }, [dateFilter]);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -237,6 +260,38 @@ export default function DashboardPage() {
   return (
     <main className="ml-64 min-h-screen bg-gray-50 dark:bg-zinc-950 p-6 md:p-10">
       <div className="w-full">
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              Dashboard
+            </h1>
+
+            <p className="text-gray-500 dark:text-gray-400 mt-1">
+              Financial overview of your business.
+            </p>
+          </div>
+
+          <select
+            value={dateFilter}
+            onChange={(e) => setDateFilter(e.target.value)}
+            className="
+    bg-white dark:bg-zinc-900
+    border border-gray-300 dark:border-zinc-700
+    rounded-xl
+    px-4 py-2
+    "
+          >
+            <option value="this_month">This Month</option>
+
+            <option value="last_month">Last Month</option>
+
+            <option value="last_3_months">Last 3 Months</option>
+
+            <option value="this_year">This Year</option>
+
+            <option value="all_time">All Time</option>
+          </select>
+        </div>
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-6 mb-6">
           <div
             className="bg-white
