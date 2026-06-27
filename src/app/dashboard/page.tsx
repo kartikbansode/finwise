@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { calculate44ADA, calculate44AD } from "@/lib/presumptiveTax";
 import { createClient } from "@/lib/supabase";
@@ -15,7 +15,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, ArrowUpRight, ArrowDownRight, Calendar, Target, Shield, Sparkles, CreditCard, FileText, PieChart, BarChart3, TrendingUp, TrendingDown } from "lucide-react";
+import { Search, ArrowUpRight, TrendingUp, TrendingDown } from "lucide-react";
 
 import { calculateFullTaxBreakdown, TaxRegime } from "@/lib/taxLogic";
 import TaxDisclaimer from "@/components/TaxDisclaimer";
@@ -102,6 +102,7 @@ export default function DashboardPage() {
       const now = new Date();
 
       const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+      const chartStartDate = new Date(now.getFullYear(), now.getMonth() - 11, 1);
 
       const { data: incomeData } = await supabase
         .from("income_entries")
@@ -234,13 +235,13 @@ export default function DashboardPage() {
         .from("income_entries")
         .select("amount, entry_date")
         .eq("user_id", userData.user.id)
-        .gte("entry_date", startDate.toISOString());
+        .gte("entry_date", chartStartDate.toISOString());
 
       const { data: allExpenses } = await supabase
         .from("expense_entries")
         .select("amount, entry_date")
         .eq("user_id", userData.user.id)
-        .gte("entry_date", startDate.toISOString());
+        .gte("entry_date", chartStartDate.toISOString());
 
       const chartMap: Record<
         string,
@@ -401,7 +402,9 @@ export default function DashboardPage() {
   const cashFlowOut = monthlyExpenses;
   const netProfit = monthlyProfit;
   const budgetUsed = monthlyIncome ? Math.min(100, (monthlyExpenses / monthlyIncome) * 100) : 0;
+  const budgetRemaining = Math.max(0, 100 - budgetUsed);
   const savingsRate = monthlyIncome ? ((monthlyIncome - monthlyExpenses) / monthlyIncome) * 100 : 0;
+  const safeSpendPercent = monthlyIncome ? Math.round((safeToSpend / monthlyIncome) * 100) : 0;
   const topClient = topClients[0];
   const topVendor = topVendors[0];
   const filterOptions = [
@@ -418,12 +421,10 @@ export default function DashboardPage() {
       <div className="space-y-8">
         <section className="grid gap-6">
           <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
-            <div className="space-y-3">
-              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-400">Command Center</p>
-              <div className="space-y-2">
-                <h1 className="text-4xl font-semibold tracking-tight text-slate-950 dark:text-white">Dashboard</h1>
-                <p className="max-w-2xl text-sm text-slate-600 dark:text-slate-400">Good morning, here’s your premium business overview for today. Review cash flow, tax readiness, and recurring obligations in one place.</p>
-              </div>
+            <div className="space-y-3 max-w-3xl">
+              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-400">Business Dashboard</p>
+              <h1 className="text-4xl font-semibold tracking-tight text-slate-950 dark:text-white">Premium financial snapshot</h1>
+              <p className="text-sm text-slate-600 dark:text-slate-400">Review cash flow, reserves, and upcoming obligations in a clean, modern view.</p>
             </div>
             <div className="grid gap-3 sm:grid-cols-[1fr_auto] xl:grid-cols-[1fr_auto_auto] items-center">
               <div className="relative w-full max-w-xl">
@@ -434,40 +435,30 @@ export default function DashboardPage() {
               <Button size="sm" onClick={() => router.push("/expenses")}>Add Expense</Button>
             </div>
           </div>
-          <div className="grid gap-4 xl:grid-cols-3">
-            <div className="rounded-[2rem] border border-slate-200/80 bg-white/95 shadow-sm shadow-slate-200/40 dark:border-zinc-800 dark:bg-zinc-950 dark:shadow-none p-6">
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.25em] text-slate-400 dark:text-slate-500">Revenue</p>
-                  <p className="mt-3 text-3xl font-semibold text-slate-950 dark:text-white">₹{cashFlowIn.toLocaleString("en-IN")}</p>
-                </div>
-                <div className="rounded-2xl bg-emerald-50 p-3 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-300"><TrendingUp className="h-5 w-5" /></div>
-              </div>
-              <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">Total income recorded for the current reporting period.</p>
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <div className="rounded-[1.75rem] border border-slate-200/80 bg-white/95 shadow-sm shadow-slate-200/40 dark:border-zinc-800 dark:bg-zinc-950 dark:shadow-none p-6">
+              <p className="text-xs uppercase tracking-[0.25em] text-slate-400 dark:text-slate-500">Revenue</p>
+              <p className="mt-3 text-3xl font-semibold text-slate-950 dark:text-white">₹{cashFlowIn.toLocaleString("en-IN")}</p>
+              <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">Income recorded this month.</p>
             </div>
-            <div className="rounded-[2rem] border border-slate-200/80 bg-white/95 shadow-sm shadow-slate-200/40 dark:border-zinc-800 dark:bg-zinc-950 dark:shadow-none p-6">
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.25em] text-slate-400 dark:text-slate-500">Expenses</p>
-                  <p className="mt-3 text-3xl font-semibold text-slate-950 dark:text-white">₹{cashFlowOut.toLocaleString("en-IN")}</p>
-                </div>
-                <div className="rounded-2xl bg-red-50 p-3 text-red-600 dark:bg-red-950/30 dark:text-red-400"><TrendingDown className="h-5 w-5" /></div>
-              </div>
-              <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">Expenses captured in the current period across vendors and categories.</p>
+            <div className="rounded-[1.75rem] border border-slate-200/80 bg-white/95 shadow-sm shadow-slate-200/40 dark:border-zinc-800 dark:bg-zinc-950 dark:shadow-none p-6">
+              <p className="text-xs uppercase tracking-[0.25em] text-slate-400 dark:text-slate-500">Expenses</p>
+              <p className="mt-3 text-3xl font-semibold text-slate-950 dark:text-white">₹{cashFlowOut.toLocaleString("en-IN")}</p>
+              <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">Total expenses this month.</p>
             </div>
-            <div className="rounded-[2rem] border border-slate-200/80 bg-white/95 shadow-sm shadow-slate-200/40 dark:border-zinc-800 dark:bg-zinc-950 dark:shadow-none p-6">
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.25em] text-slate-400 dark:text-slate-500">Net Profit</p>
-                  <p className="mt-3 text-3xl font-semibold text-slate-950 dark:text-white">₹{netProfit.toLocaleString("en-IN")}</p>
-                </div>
-                <div className="rounded-2xl bg-blue-50 p-3 text-blue-600 dark:bg-blue-950/30 dark:text-blue-300"><ArrowUpRight className="h-5 w-5" /></div>
-              </div>
-              <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">Revenue minus expenses for the current reporting window.</p>
+            <div className="rounded-[1.75rem] border border-slate-200/80 bg-white/95 shadow-sm shadow-slate-200/40 dark:border-zinc-800 dark:bg-zinc-950 dark:shadow-none p-6">
+              <p className="text-xs uppercase tracking-[0.25em] text-slate-400 dark:text-slate-500">Net Profit</p>
+              <p className="mt-3 text-3xl font-semibold text-slate-950 dark:text-white">₹{netProfit.toLocaleString("en-IN")}</p>
+              <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">Revenue minus expenses.</p>
+            </div>
+            <div className="rounded-[1.75rem] border border-slate-200/80 bg-white/95 shadow-sm shadow-slate-200/40 dark:border-zinc-800 dark:bg-zinc-950 dark:shadow-none p-6">
+              <p className="text-xs uppercase tracking-[0.25em] text-slate-400 dark:text-slate-500">Available Cash</p>
+              <p className="mt-3 text-3xl font-semibold text-slate-950 dark:text-white">₹{safeToSpend.toLocaleString("en-IN")}</p>
+              <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">After tax and GST reserve.</p>
             </div>
           </div>
         </section>
-        <section className="grid gap-6 xl:grid-cols-[1.8fr_1fr]">
+        <section className="grid gap-6 lg:grid-cols-[2fr_1fr]">
           <div className="space-y-6">
             <div className="grid gap-4 md:grid-cols-2">
               <Card className="overflow-hidden rounded-[1.75rem] border-slate-200/80 bg-white/95 shadow-sm shadow-slate-200/40 dark:border-zinc-800 dark:bg-zinc-950 dark:shadow-none p-6">
