@@ -1,10 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import TaxDisclaimer from "@/components/TaxDisclaimer";
 import { calculate44ADA, calculate44AD } from "@/lib/presumptiveTax";
 import MobileBlocker from "@/components/MobileBlocker";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export default function TaxPage() {
   const supabase = createClient();
@@ -16,8 +25,9 @@ export default function TaxPage() {
   const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
   useEffect(() => {
-    loadData();
+    void loadData();
   }, []);
+
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 1024);
@@ -31,6 +41,8 @@ export default function TaxPage() {
   }, []);
 
   async function loadData() {
+    setLoading(true);
+
     const { data: userData } = await supabase.auth.getUser();
 
     if (!userData.user) {
@@ -61,11 +73,6 @@ export default function TaxPage() {
       0,
     );
 
-    const totalExpenses = (expenseData || []).reduce(
-      (sum, item) => sum + Number(item.amount),
-      0,
-    );
-
     const projectedAnnual = totalIncome * 12;
 
     setAnnualIncome(projectedAnnual);
@@ -81,9 +88,9 @@ export default function TaxPage() {
     }
 
     setTaxableIncome(calculatedTaxable);
-
     setLoading(false);
   }
+
   if (isMobile === null) {
     return null;
   }
@@ -105,187 +112,162 @@ export default function TaxPage() {
     );
   }
 
+  const taxMethodLabel = profile?.tax_method === "44ada"
+    ? "44ADA"
+    : profile?.tax_method === "44ad"
+      ? "44AD"
+      : "Normal";
+
+  const gstStatus = profile?.gst_registered ? "Registered" : "Not Registered";
+
   return (
     <main className="ml-64 min-h-screen bg-gray-50 dark:bg-zinc-950 p-6 md:p-10">
-      <div className="w-full">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Tax & Compliance Center
-          </h1>
-
-          <p className="text-gray-500 dark:text-gray-400 mt-2">
-            Manage GST, Advance Tax, TDS and Presumptive Taxation
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-4 gap-4 mb-8">
-          <div
-            className="
-rounded-xl
-border border-blue-500/30
-bg-blue-500/10
-p-5
-"
-          >
-            <p className="text-gray-500 dark:text-gray-400 text-sm">
-              Annual Revenue
+      <div className="mx-auto max-w-7xl space-y-8">
+        <section className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-sm uppercase tracking-[0.24em] text-emerald-700 dark:text-emerald-300">
+              Tax & compliance
             </p>
-
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
-              ₹{annualIncome.toLocaleString("en-IN")}
-            </h2>
+            <h1 className="mt-3 text-3xl font-bold text-gray-900 dark:text-white">
+              Tax Center
+            </h1>
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+              Manage GST, advance tax, TDS and presumptive compliance from one professional dashboard.
+            </p>
           </div>
 
-          <div
-            className="
-rounded-xl
-border border-green-500/30
-bg-green-500/10
-p-5
-"
-          >
-            <p className="text-gray-500 dark:text-gray-400 text-sm">
-              Taxable Income
-            </p>
-
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
-              ₹{taxableIncome.toLocaleString("en-IN")}
-            </h2>
+          <div className="flex flex-wrap gap-3">
+            <Button asChild variant="outline" size="sm">
+              <Link href="/settings">Update Profile</Link>
+            </Button>
+            <Button onClick={loadData} variant="secondary" size="sm">
+              Refresh Data
+            </Button>
           </div>
+        </section>
 
-          <div
-            className="
-rounded-xl
-border border-purple-500/30
-bg-purple-500/10
-p-5
-"
-          >
-            <p className="text-gray-500 dark:text-gray-400 text-sm">
-              Tax Method
-            </p>
+        <section className="grid gap-4 md:grid-cols-4">
+          <Card className="p-5">
+            <CardHeader className="gap-2">
+              <CardTitle>Annual Revenue</CardTitle>
+              <CardDescription>Projected from your current monthly income.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="mt-4 text-3xl font-semibold text-gray-900 dark:text-white">
+                ₹{annualIncome.toLocaleString("en-IN")}
+              </p>
+            </CardContent>
+          </Card>
 
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
-              {profile?.tax_method === "44ada"
-                ? "44ADA"
-                : profile?.tax_method === "44ad"
-                  ? "44AD"
-                  : "Normal"}
-            </h2>
-          </div>
-          <div
-            className="
-  rounded-xl
-  border border-amber-500/30
-  bg-amber-500/10
-  p-5
-  "
-          >
-            <p className="text-gray-500 dark:text-gray-400 text-sm">
-              GST Status
-            </p>
+          <Card className="p-5">
+            <CardHeader className="gap-2">
+              <CardTitle>Taxable Income</CardTitle>
+              <CardDescription>Estimated taxable value based on your tax regime.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="mt-4 text-3xl font-semibold text-gray-900 dark:text-white">
+                ₹{taxableIncome.toLocaleString("en-IN")}
+              </p>
+            </CardContent>
+          </Card>
 
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
-              {profile?.gst_registered ? "Registered" : "Not Registered"}
-            </h2>
-          </div>
-        </div>
+          <Card className="p-5">
+            <CardHeader className="gap-2">
+              <CardTitle>Tax Method</CardTitle>
+              <CardDescription>Your current compliance method.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="mt-4 text-3xl font-semibold text-gray-900 dark:text-white">
+                {taxMethodLabel}
+              </p>
+            </CardContent>
+          </Card>
 
-        <div className="grid md:grid-cols-2 gap-4 mb-8">
-          <div
-            className="bg-white dark:bg-zinc-900
-border border-gray-200 dark:border-zinc-800
-rounded-xl
-p-6"
-          >
-            <h3 className="font-semibold text-lg text-gray-900 dark:text-white mb-4">
-              GST Overview
-            </h3>
+          <Card className="p-5">
+            <CardHeader className="gap-2">
+              <CardTitle>GST Status</CardTitle>
+              <CardDescription>Track whether GST registration is active.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="mt-4 text-3xl font-semibold text-gray-900 dark:text-white">
+                {gstStatus}
+              </p>
+            </CardContent>
+          </Card>
+        </section>
 
-            <div className="space-y-2">
+        <section className="grid gap-4 md:grid-cols-2">
+          <Card className="p-5">
+            <CardHeader className="gap-2">
+              <CardTitle>GST Overview</CardTitle>
+              <CardDescription>Review turnover and filing readiness.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
               <p className="text-gray-700 dark:text-gray-300">
                 Annual Turnover:
                 <span className="font-medium ml-2 text-gray-900 dark:text-white">
                   ₹{annualIncome.toLocaleString("en-IN")}
                 </span>
               </p>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
-          <div
-            className="bg-white dark:bg-zinc-900
-border border-gray-200 dark:border-zinc-800
-rounded-xl
-p-6"
-          >
-            <h3 className="font-semibold text-lg text-gray-900 dark:text-white mb-4">
-              Presumptive Taxation
-            </h3>
-
-            <div className="space-y-2">
+          <Card className="p-5">
+            <CardHeader className="gap-2">
+              <CardTitle>Presumptive Taxation</CardTitle>
+              <CardDescription>Understand how your taxable income is determined.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
               <p className="text-gray-700 dark:text-gray-300">
                 Current Method:
                 <span className="font-medium ml-2 text-gray-900 dark:text-white">
-                  {profile?.tax_method}
+                  {profile?.tax_method || "Normal"}
                 </span>
               </p>
-
               <p className="text-gray-700 dark:text-gray-300">
                 Taxable Income:
                 <span className="font-medium ml-2 text-gray-900 dark:text-white">
                   ₹{taxableIncome.toLocaleString("en-IN")}
                 </span>
               </p>
-            </div>
-          </div>
-        </div>
+            </CardContent>
+          </Card>
+        </section>
 
-        <div className="grid md:grid-cols-3 gap-4 mb-8">
-          <div
-            className="bg-white dark:bg-zinc-900
-border border-gray-200 dark:border-zinc-800
-rounded-xl
-p-5"
-          >
-            <h3 className="font-semibold mb-3">Advance Tax</h3>
-
-            <div className="space-y-2">
+        <section className="grid gap-4 md:grid-cols-3">
+          <Card className="p-5">
+            <CardHeader className="gap-2">
+              <CardTitle>Advance Tax</CardTitle>
+              <CardDescription>Quarterly filing deadlines for business tax.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
               <p className="text-gray-700 dark:text-gray-300">15 June — Q1</p>
-
-              <p className="text-gray-700 dark:text-gray-300">
-                15 September — Q2
-              </p>
-
-              <p className="text-gray-700 dark:text-gray-300">
-                15 December — Q3
-              </p>
-
+              <p className="text-gray-700 dark:text-gray-300">15 September — Q2</p>
+              <p className="text-gray-700 dark:text-gray-300">15 December — Q3</p>
               <p className="text-gray-700 dark:text-gray-300">15 March — Q4</p>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
-          <div
-            className="bg-white dark:bg-zinc-900
-border border-gray-200 dark:border-zinc-800
-rounded-xl
-p-5"
-          >
-            <h3 className="font-semibold mb-3">TDS Tracker</h3>
+          <Card className="p-5">
+            <CardHeader className="gap-2">
+              <CardTitle>TDS Tracker</CardTitle>
+              <CardDescription>Monitor your deduction obligations.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-500 dark:text-gray-400">Coming soon</p>
+            </CardContent>
+          </Card>
 
-            <p className="text-gray-500 dark:text-gray-400">Coming soon</p>
-          </div>
-
-          <div
-            className="bg-white dark:bg-zinc-900
-border border-gray-200 dark:border-zinc-800
-rounded-xl
-p-5"
-          >
-            <h3 className="font-semibold mb-3">Regime Comparison</h3>
-
-            <p className="text-gray-500 dark:text-gray-400">Next phase</p>
-          </div>
-        </div>
+          <Card className="p-5">
+            <CardHeader className="gap-2">
+              <CardTitle>Regime Comparison</CardTitle>
+              <CardDescription>Use this space to compare standard vs. presumptive filing.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-500 dark:text-gray-400">Next phase</p>
+            </CardContent>
+          </Card>
+        </section>
 
         <TaxDisclaimer />
       </div>
