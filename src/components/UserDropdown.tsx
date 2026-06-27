@@ -120,7 +120,7 @@ export default function UserDropdown({
 
       {/* Logout Confirmation Modal */}
       {showLogoutModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999]">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[999999]">
           <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl p-6 w-full max-w-md">
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Logout</h3>
             <p className="text-gray-500 dark:text-gray-400 mb-6">Are you sure you want to logout from FinWise?</p>
