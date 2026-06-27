@@ -9,7 +9,7 @@ import { ChevronDown, Settings, LogOut, User } from "lucide-react";
 interface Props {
   name: string;
   userType?: string;
-  profileImageUrl?: string;   // ← New prop
+  profileImageUrl?: string;
 }
 
 export default function UserDropdown({ 
@@ -33,7 +33,6 @@ export default function UserDropdown({
         setOpen(false);
       }
     }
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -43,29 +42,32 @@ export default function UserDropdown({
     router.replace("/login");
   }
 
+  // Add cache buster to avoid cached old image
+  const imageSrc = profileImageUrl 
+    ? `${profileImageUrl}?t=${Date.now()}` 
+    : null;
+
   return (
     <div ref={dropdownRef} className="relative w-full">
       <button
         onClick={() => setOpen(!open)}
-        className="
-          w-full flex items-center gap-3
-          bg-white dark:bg-zinc-900
-          border border-gray-200 dark:border-zinc-800
-          rounded-2xl px-4 py-3
-          hover:bg-gray-50 dark:hover:bg-zinc-800
-          hover:border-gray-300 dark:hover:border-zinc-700 
-          transition-all duration-200
-        "
+        className="w-full flex items-center gap-3 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl px-4 py-3 hover:bg-gray-50 dark:hover:bg-zinc-800 hover:border-gray-300 dark:hover:border-zinc-700 transition-all duration-200"
       >
         {/* Profile Picture */}
-        <div className="relative">
-          {profileImageUrl ? (
+        <div className="relative flex-shrink-0">
+          {imageSrc ? (
             <Image
-              src={profileImageUrl}
+              src={imageSrc}
               alt="Profile"
               width={40}
               height={40}
               className="w-10 h-10 rounded-full object-cover border border-gray-200 dark:border-zinc-700"
+              onError={(e) => {
+                // Fallback if image fails to load
+                e.currentTarget.style.display = 'none';
+                const parent = e.currentTarget.parentElement;
+                if (parent) parent.innerHTML = `<div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-700 text-white flex items-center justify-center font-semibold shadow"> ${name?.charAt(0)?.toUpperCase() || "U"} </div>`;
+              }}
             />
           ) : (
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-700 text-white flex items-center justify-center font-semibold shadow">
@@ -85,9 +87,7 @@ export default function UserDropdown({
 
         <ChevronDown
           size={18}
-          className={`text-gray-400 dark:text-gray-500 transition-transform duration-200 ${
-            open ? "rotate-180" : ""
-          }`}
+          className={`text-gray-400 dark:text-gray-500 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
       </button>
 
@@ -118,37 +118,16 @@ export default function UserDropdown({
         </div>
       )}
 
-      {/* Logout Confirmation Modal */}
+      {/* Logout Modal */}
       {showLogoutModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999]">
           <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl p-6 w-full max-w-md">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-              Logout
-            </h3>
-            <p className="text-gray-500 dark:text-gray-400 mb-6">
-              Are you sure you want to logout from FinWise?
-            </p>
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Logout</h3>
+            <p className="text-gray-500 dark:text-gray-400 mb-6">Are you sure you want to logout from FinWise?</p>
 
             <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setShowLogoutModal(false)}
-                className="px-4 py-2 rounded-xl border border-gray-300 dark:border-zinc-700"
-              >
-                Cancel
-              </button>
-
-              <button
-                disabled={loggingOut}
-                onClick={async () => {
-                  try {
-                    setLoggingOut(true);
-                    await logout();
-                  } finally {
-                    setLoggingOut(false);
-                  }
-                }}
-                className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white"
-              >
+              <button onClick={() => setShowLogoutModal(false)} className="px-4 py-2 rounded-xl border border-gray-300 dark:border-zinc-700">Cancel</button>
+              <button disabled={loggingOut} onClick={logout} className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white">
                 {loggingOut ? "Logging out..." : "Logout"}
               </button>
             </div>

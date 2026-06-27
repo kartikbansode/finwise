@@ -136,9 +136,9 @@ export default function Sidebar() {
         <div className="mb-4">
           {profile && (
             <UserDropdown
-              name={profile.full_name}
-              userType={profile.user_type}
-              profileImageUrl={profile.profile_image_url} // ← Add this line
+              name={profile?.full_name || ""}
+              userType={profile?.user_type}
+              profileImageUrl={profile?.profile_image_url} // ← Important
             />
           )}
         </div>

@@ -498,6 +498,16 @@ export default function SettingsPage() {
                               <Image
                                 src={profilePic}
                                 alt="Profile"
+                                width={112}
+                                height={112}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : profile.profile_image_url ? (
+                              <Image
+                                src={profile.profile_image_url}
+                                alt="Profile"
+                                width={112}
+                                height={112}
                                 className="w-full h-full object-cover"
                               />
                             ) : (
