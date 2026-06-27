@@ -537,7 +537,11 @@ export default function IncomePage() {
                         ))}
                       </Pie>
                       <Tooltip
-                        formatter={(value: number) => CURRENCY_FORMAT.format(value)}
+                        formatter={(value) => {
+                          const rawValue = Array.isArray(value) ? value[0] : value;
+                          const numericValue = Number(rawValue);
+                          return isNaN(numericValue) ? "" : CURRENCY_FORMAT.format(numericValue);
+                        }}
                       />
                     </RechartsPie>
                   </ResponsiveContainer>
@@ -694,8 +698,14 @@ export default function IncomePage() {
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="month" />
-                      <YAxis tickFormatter={(value) => `₹${(value / 1000).toFixed(0)}k`} />
-                      <Tooltip formatter={(value: number) => CURRENCY_FORMAT.format(value)} />
+                      <YAxis tickFormatter={(value) => `₹${(Number(value) / 1000).toFixed(0)}k`} />
+                      <Tooltip
+                        formatter={(value) => {
+                          const rawValue = Array.isArray(value) ? value[0] : value;
+                          const numericValue = Number(rawValue);
+                          return isNaN(numericValue) ? "" : CURRENCY_FORMAT.format(numericValue);
+                        }}
+                      />
                       <Area type="monotone" dataKey="revenue" stroke="#10B981" fill="url(#incomeGradient)" />
                     </AreaChart>
                   </ResponsiveContainer>
