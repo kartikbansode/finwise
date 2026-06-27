@@ -597,28 +597,27 @@ export default function SettingsPage() {
                         </div>
                       </div>
                     </CardContent>
-                  </Card>
-
-                  {/* Danger Zone - Now only in Profile */}
-                  <Card className="mt-8 border-red-200 dark:border-red-900/50 bg-red-50/50 dark:bg-red-950/20">
-                    <CardHeader>
-                      <CardTitle className="text-red-600 dark:text-red-400 flex items-center gap-2">
-                        <AlertTriangle className="h-5 w-5" />
-                        Danger Zone
-                      </CardTitle>
-                      <CardDescription>
-                        Irreversible actions. Proceed with caution.
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <button
-                        onClick={() => setDeleteModalOpen(true)}
-                        className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-medium flex items-center gap-2 transition"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                        Delete Account
-                      </button>
-                    </CardContent>
+                    {/* Danger Zone - Now only in Profile */}
+                    <Card className="mt-8 border-red-200 dark:border-red-900/50 bg-red-50/50 dark:bg-red-950/20 m-4">
+                      <CardHeader>
+                        <CardTitle className="text-red-600 dark:text-red-400 flex items-center gap-2">
+                          <AlertTriangle className="h-5 w-5" />
+                          Danger Zone
+                        </CardTitle>
+                        <CardDescription>
+                          Irreversible actions. Proceed with caution.
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <button
+                          onClick={() => setDeleteModalOpen(true)}
+                          className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-medium flex items-center gap-2 transition"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          Delete Account
+                        </button>
+                      </CardContent>
+                    </Card>
                   </Card>
                 </motion.div>
               )}
