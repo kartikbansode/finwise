@@ -24,7 +24,6 @@ export default function UserDropdown({
   const [open, setOpen] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
-  const [cacheBuster, setCacheBuster] = useState(0);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -38,21 +37,10 @@ export default function UserDropdown({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Update cache buster when profileImageUrl changes
-  useEffect(() => {
-    if (profileImageUrl) {
-      setCacheBuster(Date.now());
-    }
-  }, [profileImageUrl]);
-
   async function logout() {
     await supabase.auth.signOut();
     router.replace("/login");
   }
-
-  const imageSrc = profileImageUrl 
-    ? `${profileImageUrl}?t=${cacheBuster}` 
-    : null;
 
   return (
     <div ref={dropdownRef} className="relative w-full">
@@ -62,9 +50,9 @@ export default function UserDropdown({
       >
         {/* Profile Picture */}
         <div className="relative flex-shrink-0">
-          {imageSrc ? (
+          {profileImageUrl ? (
             <Image
-              src={imageSrc}
+              src={profileImageUrl}
               alt="Profile"
               width={40}
               height={40}
