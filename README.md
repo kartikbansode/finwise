@@ -257,7 +257,7 @@ Users should consult qualified professionals before making important financial, 
 
 > **FinWise India is currently under active development.**
 
-This project is in its early stages and features may change, improve, or be replaced in future releases.
+This project is in its early stages and features may change, improve, or be replaced in future releases
 
 ## Important Notice
 
