@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import Sidebar from "@/components/Sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Geist} from "next/font/google";
+import ProjectBanner from "@/components/ProjectBanner";
 
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
@@ -29,11 +30,12 @@ export default function RootLayout({
       className={cn("h-full antialiased", "font-sans", geist.variable)}
     >
       <body>
-        <ThemeProvider>
-          <Sidebar />
-          {children}
-        </ThemeProvider>
-      </body>
+  <ThemeProvider>
+    <ProjectBanner />
+    <Sidebar />
+    {children}
+  </ThemeProvider>
+</body>
     </html>
   );
 }
