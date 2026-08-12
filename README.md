@@ -18,6 +18,8 @@
 
 <br>
 
+**For reference, analysis, or project evaluation, you may review the latest release: [v1.4.1](https://github.com/kartikbansode/finwise/releases/tag/v1.4.1)**
+
 ---
 
 </div>
